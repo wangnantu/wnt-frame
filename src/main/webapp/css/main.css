@@ -1,0 +1,54 @@
+/*!
+ * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
+ * @package bootstrap-fileinput
+ * @version 4.2.8
+ *
+ * File input styling for Bootstrap 3.0
+ * Built for Yii Framework 2.0
+ * Author: Kartik Visweswaran
+ * Year: 2015
+ * For more Yii related demos visit http://demos.krajee.com
+ */
+#hd{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+}
+#bd{
+position:absolute;
+top:40px;
+right:0;
+bottom:0px;
+left:0;
+overflow:hidden;
+width:100%;
+_height:100%;
+}
+#side{
+position:absolute;
+top:0;
+left:0;
+bottom:0;
+overflow:auto;
+width:250px;
+_height:100%;
+background:#666;
+}
+#main{
+position:absolute;
+_position:static;
+top:0;
+right:0;
+bottom:0;
+left:0px;
+overflow:auto;
+_overflow:hidden;
+_height:100%;
+background:#666;
+}
+#content{
+_overflow:auto;
+_width:100%;
+_height:50%;
+}
