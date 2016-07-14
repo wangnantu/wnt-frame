@@ -2,7 +2,6 @@ package com.wnt.controller;
 
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -60,6 +59,20 @@ import com.wnt.util.MD5Util;
 	    	return map;
 	    }
 	    
+	    @RequestMapping(value="/signout",method = RequestMethod.GET)
+		@ResponseBody  
+	    public Map<String, String> signout(HttpServletRequest request, HttpServletResponse response,HttpSession session){
+	    	Map<String, String> map = new HashMap<String, String>();
+	    	if(!session.getAttribute("userid").equals(null)){
+	    		session.removeAttribute("userid");
+	    	}
+	    	map.put("code", "0");
+	    	map.put("msg","登出成功");
+	    	logger.info("登出成功");
+	    	return map;
+	    	
+	    }
+	    
 	    @RequestMapping(value="/chgpswd",method = RequestMethod.GET)
 		@ResponseBody  
 		public Map<String, String> changePassword(HttpServletRequest request, HttpServletResponse response){
@@ -77,6 +90,7 @@ import com.wnt.util.MD5Util;
     	    	user.setUserid(userid);
     	    	user.setPassword(newpassword);
     	    	int r = this.userService.updateUser(user);
+    	    	logger.info(r);
     	    	map.put("code", "0");
 	    		map.put("msg", "修改成功");
     		}else{

@@ -75,7 +75,7 @@
               <img src="../img/admin.png" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-              <p class="username">Linlay</p>
+              <p class="username">管理员</p>
               <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
             </div>
           </div>
@@ -347,10 +347,27 @@
 			}
 		}
 		function signout(){
-			
-						location.href=getContextPath()+"/login.html";
-						
-				
+						var userid = ReadCookie("userid");
+						$.ajax({
+							data : null,
+							//type : "POST",
+							contentType : "application/json; charset=utf-8",
+							dataType : "json",
+							async : true,//同步
+							url : getContextPath()+"/user/signout",
+							error : function(XMLHttpRequest, textStatus, errorThrown) {
+								alert(XMLHttpRequest.status);
+								alert(XMLHttpRequest.readyState);
+								alert(textStatus);
+							},
+							success : function(data) {
+								if(data.code==0){
+									
+									alert(data.msg);
+									location.href=getContextPath()+"/login.html";
+								}	
+							}
+						});
 		}
 		function changepswd() {
 			var userid =  ReadCookie("userid");
