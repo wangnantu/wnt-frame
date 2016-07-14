@@ -347,28 +347,10 @@
 			}
 		}
 		function signout(){
-			$.ajax({
-					data : JSON.stringify({
-					"params" : {
-						"hehe":"123"
-					},
-					"funcid": "200O"
-					}),
-					type : "POST",
-					contentType : "application/json; charset=utf-8",
-					dataType : "json",
-					async : true,
-					url : "/biz.do",
-					error : function(XMLHttpRequest, textStatus, errorThrown) {
-						alert(XMLHttpRequest.status);
-						alert(XMLHttpRequest.readyState);
-						alert(textStatus);
-					},
-					success : function(data) {
-						alert(data.data.url);
-						location.href=data.data.url;
-					}
-			});
+			
+						location.href=getContextPath()+"/login.html";
+						
+				
 		}
 		function changepswd() {
 			var userid =  ReadCookie("userid");
@@ -403,8 +385,11 @@
 					alert(textStatus);
 				},
 				success : function(data) {
-					if(data.code=1){
-						$("#chguserModal").modal("hide");
+					if(data.code==0){
+						$("#olduserpswd").val("");
+						$("#newuserpswd").val("");
+						$("#newuserpswd2").val("");
+						$("#chgpswdModal").modal("hide");
 						alert(data.msg);
 						//location.href=data.data.url;
 					}	
