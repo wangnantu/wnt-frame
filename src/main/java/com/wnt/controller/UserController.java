@@ -69,17 +69,21 @@ import com.wnt.util.MD5Util;
 	    	String olduserpswd = (String)paramMap.get("olduserpswd");
 	    	String newuserpswd = (String)paramMap.get("newuserpswd");
 	    	User u = this.userService.getUserById(userid);
+	    	String pswdsalt = u.getPswdsalt();
+	    	String newpassword = MD5Util.MD5(newuserpswd+"#"+pswdsalt).toUpperCase();
 	    	System.out.println(u.getUsername());
     		if(verifyPassword(userid,olduserpswd)){
-    			//改密码
+    			User user = new User();
+    	    	user.setUserid(userid);
+    	    	user.setPassword(newpassword);
+    	    	int r = this.userService.updateUser(user);
+    	    	map.put("code", "0");
+	    		map.put("msg", "修改成功");
     		}else{
     			map.put("code", "102");
 	    		map.put("msg", "密码错误");
 	    		logger.info("密码错误");
     		}
-	    	
-	    	
-	    	map.put("msg", userid);
 	    	return map;
 	    }
 	    
