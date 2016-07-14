@@ -210,6 +210,14 @@
     <script src="../js/jquery.md5.js"></script>
     <script src="../js/qiuer.util.js"></script>
 <script>
+
+	function getContextPath(){ 
+			var pathName = document.location.pathname; 
+			var index = pathName.substr(1).indexOf("/"); 
+			var result = pathName.substr(0,index+1); 
+			return result; 
+		} 
+		
 	$.jgrid.defaults.styleUI = 'Bootstrap';	
 	$(document).ready(function () {
 			   $("#sidebar-loader").loader("show","<i class=\"fa fa-4x fa-spinner fa-spin\"></i>");
@@ -363,6 +371,7 @@
 			});
 		}
 		function changepswd() {
+			var userid =  ReadCookie("userid");
 		   	var olduserpswd = $("#olduserpswd").val();
 		   	var newuserpswd = $("#newuserpswd").val();
 		   	var newuserpswd2 = $("#newuserpswd2").val();
@@ -376,25 +385,18 @@
 		   		alert("新密码两次输入不正确！");
 		   		return;
 		   	}
-		   	/*
-		   	if(olduserpswd==newuserpswd2){
-		   		alert("新密码不能跟原始密码相同！");
-		   		return;
-		   	}
-		   	*/
+		   	
 		   	$.ajax({
-				data : JSON.stringify({
-					"funcid": "200.12",
-		      			"params":{
+				data : {
+		      				"userid":userid,
 		      				"olduserpswd": $.md5(olduserpswd).toUpperCase(),
 		      				"newuserpswd": $.md5(newuserpswd).toUpperCase()
-		      			}
-				}),
-				type : "POST",
+				},
+				//type : "POST",
 				contentType : "application/json; charset=utf-8",
 				dataType : "json",
 				async : true,//同步
-				url : "/biz.do",
+				url : getContextPath()+"/user/chgpswd",
 				error : function(XMLHttpRequest, textStatus, errorThrown) {
 					alert(XMLHttpRequest.status);
 					alert(XMLHttpRequest.readyState);
@@ -404,7 +406,7 @@
 					if(data.code=1){
 						$("#chguserModal").modal("hide");
 						alert(data.msg);
-						location.href=data.data.url;
+						//location.href=data.data.url;
 					}	
 				}
 			});
