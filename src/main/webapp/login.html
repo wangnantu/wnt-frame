@@ -88,7 +88,7 @@
 							"style" : "display"
 						});
 						$("#info").html("登录成功, 跳转中...");
-						
+						SetCookie("userid",data.userid,7);
 						SetCookie("username",data.username,7);
 						location.href=getContextPath()+"/html/main.html";
 											}
