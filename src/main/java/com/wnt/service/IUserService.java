@@ -6,4 +6,6 @@ public interface IUserService {
 	
 	 public User getUserById(String userId);
 	 
+	 public int updateUser(User user);
+	 
 }

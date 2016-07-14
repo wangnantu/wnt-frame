@@ -20,4 +20,10 @@ public class UserServiceImpl implements IUserService {
 		return this.userDao.selectByPrimaryKey(userid);
 	}
 
+	@Override
+	public int updateUser(User user) {
+
+		return this.userDao.updateByPrimaryKeySelective(user);
+	}
+
 }
