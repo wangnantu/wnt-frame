@@ -2,6 +2,7 @@ package com.wnt.controller;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -64,7 +65,7 @@ import com.wnt.util.MD5Util;
 	    public Map<String, String> signout(HttpServletRequest request, HttpServletResponse response,HttpSession session){
 	    	Map<String, String> map = new HashMap<String, String>();
 	    	if(!session.getAttribute("userid").equals(null)){
-	    		session.removeAttribute("userid");
+	    		session.invalidate();
 	    	}
 	    	map.put("code", "0");
 	    	map.put("msg","登出成功");
@@ -101,7 +102,25 @@ import com.wnt.util.MD5Util;
 	    	return map;
 	    }
 	    
-	  
+	    @RequestMapping(value="/list" ,produces= "application/json;charset=UTF-8")
+		@ResponseBody  
+		public String getUserList(){
+	    	List<User> userList = this.userService.getAllUsers();
+	    	//String json = JsonUtil.obj2json(userList.get(1));
+	    	String json = "[";
+	    	for(int i=0;i<userList.size();i++){
+	    		String userid = userList.get(i).getUserid();
+		    	String username = userList.get(i).getUsername();
+		    	if(i != userList.size()-1){
+	    		json+="{\"userid\":\""+userid+"\",\"username\":\""+username+"\"},";
+		    	}else{
+		    		json+="{\"userid\":\""+userid+"\",\"username\":\""+username+"\"}";
+		    	}
+	    	}
+	    	json+="]";
+			return json;
+	    }
+		
 	  private Boolean verifyPassword(String inputuserid,String inputpassword){
 		  Boolean pswdOk = false;
 		  User u = this.userService.getUserById(inputuserid);

@@ -1,5 +1,7 @@
 package com.wnt.service.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -24,6 +26,13 @@ public class UserServiceImpl implements IUserService {
 	public int updateUser(User user) {
 
 		return this.userDao.updateByPrimaryKeySelective(user);
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		
+		return this.userDao.selectALL();
+	
 	}
 
 }

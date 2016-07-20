@@ -1,5 +1,7 @@
 package com.wnt.dao;
 
+import java.util.List;
+
 import com.wnt.domain.User;
 
 public interface IUserDao {
@@ -14,4 +16,6 @@ public interface IUserDao {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+    
+    List<User> selectALL();
 }
