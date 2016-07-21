@@ -74,6 +74,24 @@ import com.wnt.util.MD5Util;
 	    	
 	    }
 	    
+	    @RequestMapping(value="/changeu",method = RequestMethod.GET, consumes="application/json")
+		@ResponseBody  
+		public Map<String, String> changeUser(HttpServletRequest request, HttpServletResponse response,HttpSession session){
+	    	Map<String, String> map = new HashMap<String, String>();
+	    	Map<String, Object> paramMap = getResultMap(request);
+	    	String userid = (String)paramMap.get("userid");
+	    	User u = this.userService.getUserById(userid);
+	    	session.setAttribute("userid", u.getUserid());
+    		session.setAttribute("username", u.getUsername());
+	    	map.put("code", "0");
+	    	map.put("msg","切换成功");
+	    	map.put("userid", u.getUserid());
+    		map.put("username", u.getUsername());
+	    	logger.info("切换成功");
+			return map;
+	    	
+	    }
+	    
 	    @RequestMapping(value="/chgpswd",method = RequestMethod.GET)
 		@ResponseBody  
 		public Map<String, String> changePassword(HttpServletRequest request, HttpServletResponse response){

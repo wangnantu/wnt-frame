@@ -51,8 +51,8 @@
                     	<a href="#" class="btn btn-default btn-flat" data-toggle="modal" data-target="#chgpswdModal">修改密码</a>
                     </div>
                     <div class="pull-left">
-                    	<a href="javascript:initCU();" id="changebutton1" data-index="0" class="btn btn-default btn-flat" data-toggle="toggle" >切换用户</a>
-                    	<a href="javascript:othswitchval();" id="changebutton2" data-index="0" class="btn btn-default btn-flat" data-toggle="toggle" style="display:none;" >切回用户</a>
+                    	<a href="javascript:loadU();" id="changebutton1" data-index="0" class="btn btn-default btn-flat" data-toggle="toggle" >切换用户</a>
+                    	<a href="javascript:backU();" id="changebutton2" data-index="0" class="btn btn-default btn-flat" data-toggle="toggle" style="display:none;" >切回用户</a>
                     </div>
                     <div class="pull-right">
                       <a href="javascript:signout();" id="signout" class="btn btn-default btn-flat">登出</a>
@@ -195,7 +195,7 @@
 </div>
 <div class="modal-footer">
 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-<button type="submit" class="btn btn-primary" onclick="sysswitchval();">确定</button>
+<button type="submit" class="btn btn-primary" onclick="switchU();">确定</button>
 </div>
 </div>
 </div>
@@ -211,17 +211,10 @@
     <script src="../js/qiuer.util.js"></script>
 <script>
 
-	function getContextPath(){ 
-			var pathName = document.location.pathname; 
-			var index = pathName.substr(1).indexOf("/"); 
-			var result = pathName.substr(0,index+1); 
-			return result; 
-		} 
-		
 	$.jgrid.defaults.styleUI = 'Bootstrap';	
 	$(document).ready(function () {
 			   $("#sidebar-loader").loader("show","<i class=\"fa fa-4x fa-spinner fa-spin\"></i>");
-				getmenu();
+				getMenu();
 				getUserName();
 				function n() {
 					var t = $(this).attr("href"),
@@ -247,6 +240,13 @@
 
 		}
 		
+		function getContextPath(){ 
+			var pathName = document.location.pathname; 
+			var index = pathName.substr(1).indexOf("/"); 
+			var result = pathName.substr(0,index+1); 
+			return result; 
+		} 
+		
 		function ReadCookie(cookieName) {
 		    var theCookie = "" + document.cookie;
 		    var ind = theCookie.indexOf(cookieName);
@@ -256,6 +256,21 @@
 		    /*读取Cookie值*/
 		    return unescape(theCookie.substring(ind+cookieName.length+1,ind1));
 		}
+		
+		function SetCookie(cookieName,cookieValue,nDays) {
+		    /*当前日期*/
+		    var today = new Date();
+		    /*Cookie过期时间*/
+		    var expire = new Date();
+		    /*如果未设置nDays参数或者nDays为0，取默认值1*/
+		    if(nDays == null || nDays == 0) nDays = 1;
+		    /*计算Cookie过期时间*/
+		    expire.setTime(today.getTime() + 3600000 * 24 * nDays);
+		    /*设置Cookie值*/
+		    document.cookie = cookieName + "=" + escape(cookieValue)
+		        + ";expires=" + expire.toGMTString()+";path="+getContextPath();
+		}
+		
 		function setDynamicClock(){
 			   var dt = new Date();
 			   var year=dt.getFullYear();
@@ -267,12 +282,13 @@
       		   $(".user-header p small").text(year+"年"+month+"月"+day+"日"+" "+h+":"+m+":"+s);
       		   window.setTimeout("setDynamicClock()", 1000);  
 		}
+		
 		function setinit(){
 			$("#qiuer-iframe").attr("src",$(".qiuer-menuitem").first().attr("href"));
 			$(".content-wrapper .content-header h1").html($(".qiuer-menuitem").first().find("span").html());
 			$(".content-wrapper .content-header .breadcrumb .active").html($(".qiuer-menuitem").first().find("span").html());
 		}
-		function initCU(){
+		function loadU(){
 			$.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 			$("#jqg-main").jqGrid({
 				url: getContextPath()+"/user/list",
@@ -298,13 +314,14 @@
 			$("#gbox_jqg-main .ui-jqgrid-bdiv").attr("style","width:100%;height:220px;");
 			$("#changeUser").modal("show");
 		}
-		function changeU(params){
+	
+		function changeU(param){
 			$.ajax({
-					data : params,
-					type : "POST",
+					data : param,
+					//type : "POST",
 					contentType : "application/json; charset=utf-8",
 					dataType : "json",
-					url : "/biz.do",
+					url : getContextPath()+"/user/changeu",
 					error : function(XMLHttpRequest, textStatus, errorThrown) {
 						alert(XMLHttpRequest.status);
 						alert(XMLHttpRequest.readyState);
@@ -312,23 +329,42 @@
 						alert("error:" + data.msg);
 					},
 					success : function(data) {
-						if(data.code==1){
-							location.href=data.data.url;
+						if(data.code==0){
+							SetCookie("userid",data.userid,7);
+							SetCookie("username",data.username,7);
+							$("#changeUser").modal("hide");
+							alert(data.msg);
+							refresh();	
+							//location.href=getContextPath()+"/html/main.html";
+							
 						}
 					}
 				});
+				
 		}
-		function sysswitchval(){
+		
+		function switchU(){
 			var gr = $("#jqg-main").jqGrid('getGridParam', 'selrow');
 			var rowData = $("#jqg-main").jqGrid("getRowData",gr);
 			var userid = rowData.userid;
-			alert(userid);
-			var params={"userid":userid};
-			changeU(params);
+			var loginuser = ReadCookie("loginuser");
+			//SetCookie("loginuser",loginuser,7);
+			if(userid == loginuser){
+				alert("同一用户无需切换");
+			}else{
+			var param = {"userid":userid};
+			changeU(param);	
+			document.getElementById("changebutton1").style.display="none";
+			document.getElementById("changebutton2").style.display="block";
+			}	
 		}
-		function othswitchval(){
-			var params={};
+		
+		function backU(){
+			var loginuser = ReadCookie("loginuser");
+			var params={"userid":loginuser};
 			changeU(params);
+			document.getElementById("changebutton1").style.display="block";
+			document.getElementById("changebutton2").style.display="none";	
 		}
 		function reinitIframeEND() {
 			var iframe = document.getElementById("qiuer-iframe");
@@ -409,8 +445,13 @@
 				}
 			});
 	   }
-	   function getmenu()
+	   function getMenu()
 		{
+		}
+		
+		function refresh(){
+			getUserName();
+			getMenu();
 		}
 	</script>
 </body>

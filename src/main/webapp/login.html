@@ -89,6 +89,7 @@
 						});
 						$("#info").html("登录成功, 跳转中...");
 						SetCookie("userid",data.userid,7);
+						SetCookie("loginuser",data.userid,7);
 						SetCookie("username",data.username,7);
 						location.href=getContextPath()+"/html/main.html";
 											}
@@ -129,7 +130,7 @@
 		    expire.setTime(today.getTime() + 3600000 * 24 * nDays);
 		    /*设置Cookie值*/
 		    document.cookie = cookieName + "=" + escape(cookieValue)
-		        + ";expires=" + expire.toGMTString();
+		        + ";expires=" + expire.toGMTString()+";path="+getContextPath();
 		}
 	</script>
 </body>
