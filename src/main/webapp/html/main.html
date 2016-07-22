@@ -51,8 +51,8 @@
                     	<a href="#" class="btn btn-default btn-flat" data-toggle="modal" data-target="#chgpswdModal">修改密码</a>
                     </div>
                     <div class="pull-left">
-                    	<a href="javascript:loadU();" id="changebutton1" data-index="0" class="btn btn-default btn-flat" data-toggle="toggle" >切换用户</a>
-                    	<a href="javascript:backU();" id="changebutton2" data-index="0" class="btn btn-default btn-flat" data-toggle="toggle" style="display:none;" >切回用户</a>
+                    	<a href="javascript:loadU();" id="switchUser" data-index="0" class="btn btn-default btn-flat" data-toggle="toggle" >切换用户</a>
+                    	<a href="javascript:backU();" id="backtoUser" data-index="0" class="btn btn-default btn-flat" data-toggle="toggle" style="display:none;" >切回用户</a>
                     </div>
                     <div class="pull-right">
                       <a href="javascript:signout();" id="signout" class="btn btn-default btn-flat">登出</a>
@@ -239,14 +239,12 @@
 			$(".user-header p span").html(username);
 
 		}
-		
 		function getContextPath(){ 
 			var pathName = document.location.pathname; 
 			var index = pathName.substr(1).indexOf("/"); 
 			var result = pathName.substr(0,index+1); 
 			return result; 
 		} 
-		
 		function ReadCookie(cookieName) {
 		    var theCookie = "" + document.cookie;
 		    var ind = theCookie.indexOf(cookieName);
@@ -256,7 +254,6 @@
 		    /*读取Cookie值*/
 		    return unescape(theCookie.substring(ind+cookieName.length+1,ind1));
 		}
-		
 		function SetCookie(cookieName,cookieValue,nDays) {
 		    /*当前日期*/
 		    var today = new Date();
@@ -270,7 +267,6 @@
 		    document.cookie = cookieName + "=" + escape(cookieValue)
 		        + ";expires=" + expire.toGMTString()+";path="+getContextPath();
 		}
-		
 		function setDynamicClock(){
 			   var dt = new Date();
 			   var year=dt.getFullYear();
@@ -314,7 +310,6 @@
 			$("#gbox_jqg-main .ui-jqgrid-bdiv").attr("style","width:100%;height:220px;");
 			$("#changeUser").modal("show");
 		}
-	
 		function changeU(param){
 			$.ajax({
 					data : param,
@@ -342,7 +337,6 @@
 				});
 				
 		}
-		
 		function switchU(){
 			var gr = $("#jqg-main").jqGrid('getGridParam', 'selrow');
 			var rowData = $("#jqg-main").jqGrid("getRowData",gr);
@@ -354,17 +348,16 @@
 			}else{
 			var param = {"userid":userid};
 			changeU(param);	
-			document.getElementById("changebutton1").style.display="none";
-			document.getElementById("changebutton2").style.display="block";
+			document.getElementById("switchUser").style.display="none";
+			document.getElementById("backtoUser").style.display="block";
 			}	
 		}
-		
 		function backU(){
 			var loginuser = ReadCookie("loginuser");
 			var params={"userid":loginuser};
 			changeU(params);
-			document.getElementById("changebutton1").style.display="block";
-			document.getElementById("changebutton2").style.display="none";	
+			document.getElementById("switchUser").style.display="block";
+			document.getElementById("backtoUser").style.display="none";	
 		}
 		function reinitIframeEND() {
 			var iframe = document.getElementById("qiuer-iframe");
@@ -446,9 +439,9 @@
 			});
 	   }
 	   function getMenu()
-		{
-		}
+	   {
 		
+	   }
 		function refresh(){
 			getUserName();
 			getMenu();
