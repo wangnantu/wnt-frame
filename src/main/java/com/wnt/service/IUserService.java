@@ -6,7 +6,7 @@ import com.wnt.domain.User;
 
 public interface IUserService {
 	
-	 public User getUserById(String userId);
+	 public User getUserById(String userid);
 	 
 	 public int updateUser(User user);
 	 

@@ -109,7 +109,7 @@ import com.wnt.util.MD5Util;
     	    	user.setUserid(userid);
     	    	user.setPassword(newpassword);
     	    	int r = this.userService.updateUser(user);
-    	    	logger.info(r);
+    	    	logger.debug(r);
     	    	map.put("code", "0");
 	    		map.put("msg", "修改成功");
     		}else{
@@ -124,7 +124,6 @@ import com.wnt.util.MD5Util;
 		@ResponseBody  
 		public String getUserList(){
 	    	List<User> userList = this.userService.getAllUsers();
-	    	//String json = JsonUtil.obj2json(userList.get(1));
 	    	String json = "[";
 	    	for(int i=0;i<userList.size();i++){
 	    		String userid = userList.get(i).getUserid();

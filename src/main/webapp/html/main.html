@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../css/font-awesome.css">
     <link rel="stylesheet" href="../css/_all-skins.css">
     <link rel="stylesheet" href="../css/ui.jqgrid-bootstrap.css">
-    <link rel="shortcut icon" type="image/x-icon" href="http://www.bxpplm.com/favicon.ico"/>
+    <!--  <link rel="shortcut icon" type="image/x-icon" href="http://www.bxpplm.com/favicon.ico"/>-->
   </head>
   <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -48,10 +48,10 @@
                   <!-- Menu Footer-->
                   <li class="user-footer">
                     <div class="pull-left">
-                    	<a href="#" class="btn btn-default btn-flat" data-toggle="modal" data-target="#chgpswdModal">修改密码</a>
+                    	<a href="#" id="changePswd" class="btn btn-default btn-flat" data-toggle="modal" data-target="#chgpswdModal" style="display:none;">修改密码</a>
                     </div>
                     <div class="pull-left">
-                    	<a href="javascript:loadU();" id="switchUser" data-index="0" class="btn btn-default btn-flat" data-toggle="toggle" >切换用户</a>
+                    	<a href="javascript:loadU();" id="switchUser" data-index="0" class="btn btn-default btn-flat" data-toggle="toggle" style="display:none;">切换用户</a>
                     	<a href="javascript:backU();" id="backtoUser" data-index="0" class="btn btn-default btn-flat" data-toggle="toggle" style="display:none;" >切回用户</a>
                     </div>
                     <div class="pull-right">
@@ -214,8 +214,9 @@
 	$.jgrid.defaults.styleUI = 'Bootstrap';	
 	$(document).ready(function () {
 			   $("#sidebar-loader").loader("show","<i class=\"fa fa-4x fa-spinner fa-spin\"></i>");
-				getMenu();
-				getUserName();
+				/* getMenu();
+				getUserName(); */
+				refresh();
 				function n() {
 					var t = $(this).attr("href"),
 					a = $(this).data("index"),
@@ -406,7 +407,7 @@
 		   		alert("新密码不能为空"); return;
 		   	}
 		   	if(newuserpswd!=newuserpswd2){
-		   		alert("新密码两次输入不正确！");
+		   		alert("新密码两次输入不相同！");
 		   		return;
 		   	}
 		   	
@@ -438,11 +439,46 @@
 				}
 			});
 	   }
+	   function getActions(){
+	   		var userid =  ReadCookie("userid");
+	   		var menuid = 0;
+	   			$.ajax({
+				data : {
+		      				"userid":userid,
+		      				"menuid":menuid
+				},
+				contentType : "application/json; charset=utf-8",
+				dataType : "json",
+				async : true,//同步
+				url : getContextPath()+"/action/get",
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					alert(XMLHttpRequest.status);
+					alert(XMLHttpRequest.readyState);
+					alert(textStatus);
+				},
+				success : function(data) {
+					   if(data.length>0){
+						for(var i=0;i<data.length;i++){   
+					 　　　　for(var key in data[i]){  
+					 		if(key == "actionname"){
+					          blockAction(data[i][key]); 
+					         }
+					        }   
+  						}
+  					   }
+				}
+			});
+	   }	   
+	   function blockAction(actionname)
+	   {
+	   	document.getElementById(actionname).style.display="block";
+	   }
 	   function getMenu()
 	   {
 		
 	   }
-		function refresh(){
+	   function refresh(){
+	   		getActions();
 			getUserName();
 			getMenu();
 		}
