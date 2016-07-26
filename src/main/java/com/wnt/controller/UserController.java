@@ -103,7 +103,6 @@ import com.wnt.util.MD5Util;
 	    	User u = this.userService.getUserById(userid);
 	    	String pswdsalt = u.getPswdsalt();
 	    	String newpassword = MD5Util.MD5(newuserpswd+"#"+pswdsalt).toUpperCase();
-	    	System.out.println(u.getUsername());
     		if(verifyPassword(userid,olduserpswd)){
     			User user = new User();
     	    	user.setUserid(userid);

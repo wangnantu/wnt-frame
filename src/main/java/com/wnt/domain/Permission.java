@@ -1,6 +1,6 @@
 package com.wnt.domain;
 
-public class UserAction {
+public class Permission {
     private String userid;
 
     private Integer menuid;

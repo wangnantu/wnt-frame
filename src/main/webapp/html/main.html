@@ -209,13 +209,11 @@
     <script src="../js/center-loader.js"></script> <!-- load旋转 改造 -->
     <script src="../js/jquery.md5.js"></script>
     <script src="../js/qiuer.util.js"></script>
-<script>
+<script type="text/javascript" language="javascript">
 
 	$.jgrid.defaults.styleUI = 'Bootstrap';	
 	$(document).ready(function () {
 			   $("#sidebar-loader").loader("show","<i class=\"fa fa-4x fa-spinner fa-spin\"></i>");
-				/* getMenu();
-				getUserName(); */
 				refresh();
 				function n() {
 					var t = $(this).attr("href"),
@@ -252,19 +250,13 @@
 		    if(ind==-1 || cookieName=="") return "";
 		    var ind1 = theCookie.indexOf(';',ind);
 		    if(ind1==-1) ind1 = theCookie.length;
-		    /*读取Cookie值*/
 		    return unescape(theCookie.substring(ind+cookieName.length+1,ind1));
 		}
 		function SetCookie(cookieName,cookieValue,nDays) {
-		    /*当前日期*/
 		    var today = new Date();
-		    /*Cookie过期时间*/
 		    var expire = new Date();
-		    /*如果未设置nDays参数或者nDays为0，取默认值1*/
 		    if(nDays == null || nDays == 0) nDays = 1;
-		    /*计算Cookie过期时间*/
 		    expire.setTime(today.getTime() + 3600000 * 24 * nDays);
-		    /*设置Cookie值*/
 		    document.cookie = cookieName + "=" + escape(cookieValue)
 		        + ";expires=" + expire.toGMTString()+";path="+getContextPath();
 		}
@@ -450,7 +442,7 @@
 				contentType : "application/json; charset=utf-8",
 				dataType : "json",
 				async : true,//同步
-				url : getContextPath()+"/action/get",
+				url : getContextPath()+"/permission/actions",
 				error : function(XMLHttpRequest, textStatus, errorThrown) {
 					alert(XMLHttpRequest.status);
 					alert(XMLHttpRequest.readyState);
@@ -471,16 +463,42 @@
 	   }	   
 	   function blockAction(actionname)
 	   {
-	   	document.getElementById(actionname).style.display="block";
+	   		document.getElementById(actionname).style.display="block";
 	   }
-	   function getMenu()
+	   function getMenus()
 	   {
+	   		var userid =  ReadCookie("userid");
+	   		$.ajax({
+				data : {
+		      				"userid":userid
+				},
+				contentType : "application/json; charset=utf-8",
+				dataType : "json",
+				async : true,//同步
+				url : getContextPath()+"/permission/menus",
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					alert(XMLHttpRequest.status);
+					alert(XMLHttpRequest.readyState);
+					alert(textStatus);
+				},
+				success : function(data) {
+					   if(data.length>0){
+						for(var i=0;i<data.length;i++){   
+					 　　　　 	//alert(data[i].menuname);
+  						}
+  					   } 
+  					   
+				}
+			});
 		
 	   }
+	   function loadMenu(){
+	   		
+	   }
 	   function refresh(){
-	   		getActions();
 			getUserName();
-			getMenu();
+			getActions();
+			getMenus();
 		}
 	</script>
 </body>

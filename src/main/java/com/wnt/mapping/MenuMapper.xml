@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wnt.dao.IMenuDao">
+  <resultMap id="BaseResultMap" type="com.wnt.domain.Menu">
+    <id column="menuid" jdbcType="INTEGER" property="menuid" />
+    <result column="parentid" jdbcType="INTEGER" property="parentid" />
+    <result column="menuname" jdbcType="VARCHAR" property="menuname" />
+    <result column="menuorder" jdbcType="INTEGER" property="menuorder" />
+    <result column="menutype" jdbcType="VARCHAR" property="menutype" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="creatorId" jdbcType="VARCHAR" property="creatorid" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    menuid, parentid, menuname, menuorder, menutype, url, icon, status, remark, creatorId, 
+    createTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from rbac_menu
+    where menuid = #{menuid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from rbac_menu
+    where menuid = #{menuid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wnt.domain.Menu">
+    insert into rbac_menu (menuid, parentid, menuname, 
+      menuorder, menutype, url, 
+      icon, status, remark, 
+      creatorId, createTime)
+    values (#{menuid,jdbcType=INTEGER}, #{parentid,jdbcType=INTEGER}, #{menuname,jdbcType=VARCHAR}, 
+      #{menuorder,jdbcType=INTEGER}, #{menutype,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{icon,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{creatorid,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wnt.domain.Menu">
+    insert into rbac_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="menuid != null">
+        menuid,
+      </if>
+      <if test="parentid != null">
+        parentid,
+      </if>
+      <if test="menuname != null">
+        menuname,
+      </if>
+      <if test="menuorder != null">
+        menuorder,
+      </if>
+      <if test="menutype != null">
+        menutype,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="icon != null">
+        icon,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="creatorid != null">
+        creatorId,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="menuid != null">
+        #{menuid,jdbcType=INTEGER},
+      </if>
+      <if test="parentid != null">
+        #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="menuname != null">
+        #{menuname,jdbcType=VARCHAR},
+      </if>
+      <if test="menuorder != null">
+        #{menuorder,jdbcType=INTEGER},
+      </if>
+      <if test="menutype != null">
+        #{menutype,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorid != null">
+        #{creatorid,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wnt.domain.Menu">
+    update rbac_menu
+    <set>
+      <if test="parentid != null">
+        parentid = #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="menuname != null">
+        menuname = #{menuname,jdbcType=VARCHAR},
+      </if>
+      <if test="menuorder != null">
+        menuorder = #{menuorder,jdbcType=INTEGER},
+      </if>
+      <if test="menutype != null">
+        menutype = #{menutype,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null">
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorid != null">
+        creatorId = #{creatorid,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where menuid = #{menuid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wnt.domain.Menu">
+    update rbac_menu
+    set parentid = #{parentid,jdbcType=INTEGER},
+      menuname = #{menuname,jdbcType=VARCHAR},
+      menuorder = #{menuorder,jdbcType=INTEGER},
+      menutype = #{menutype,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      icon = #{icon,jdbcType=VARCHAR},
+      status = #{status,jdbcType=CHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      creatorId = #{creatorid,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP}
+    where menuid = #{menuid,jdbcType=INTEGER}
+  </update>
+  <select id="selectMenusByUserid"  resultType="Integer">
+    select 
+    distinct(menuid)
+    from v_usermenu
+    where userid = #{userid,jdbcType=VARCHAR}
+  </select>
+  <select id="getSoncnt" parameterType="java.lang.Integer" resultType="Integer">
+  		SELECT COUNT(*) soncnt FROM rbac_menu WHERE menuid in (SELECT menuid FROM v_usermenu WHERE userid = 'sysadmin') and parentid = #{menuid,jdbcType=INTEGER}
+  </select>
+</mapper>
