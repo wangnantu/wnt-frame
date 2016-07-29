@@ -79,7 +79,7 @@
               <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
             </div>
           </div>
-          <!-- search form -->
+          <!-- search form 
           <form action="#" method="get" class="sidebar-form">
             <div class="input-group">
               <input type="text" name="q" class="form-control" placeholder="搜索...">
@@ -146,21 +146,19 @@
          <div >
          <div class="modal-body">
          	<label class="col-sm-4" align="right">原始密码：</label>
-         	<div class="col-sm-8">
+         	<div class="col-sm-6">
                 <input  type="password" id="olduserpswd" name="olduserpswd" minlength="2"  required="" aria-required="true">
             </div>
          </div>
-         <p/>
           <div class="modal-body">
          	<label class="col-sm-4 " align="right">修改密码：</label>
-         	<div class="col-sm-8">
+         	<div class="col-sm-6">
                 <input  type="password" id="newuserpswd" name="newuserpswd" minlength="2"   required="" aria-required="true">
             </div>
          </div>
-         <p/>
           <div class="modal-body">
          	<label class="col-sm-4 " align="right">确认密码：</label>
-         	<div class="col-sm-8">
+         	<div class="col-sm-6">
                 <input  type="password" id="newuserpswd2" name="newuserpswd2" minlength="2"  required="" aria-required="true">
             </div>
          </div>
@@ -278,7 +276,7 @@
 			$(".content-wrapper .content-header .breadcrumb .active").html($(".qiuer-menuitem").first().find("span").html());
 		}
 		function loadU(){
-			$.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
+			$.jgrid.styleUI.Bootstrap.base.rowTable = "table table-striped";
 			$("#jqg-main").jqGrid({
 				url: getContextPath()+"/user/list",
 				mtype: "POST",
@@ -298,9 +296,9 @@
 				viewrecords: false
 			});
 			//$("#jqg-main").jqGrid('filterToolbar');
-			$("#gbox_jqg-main,#gbox_jqg-main .ui-jqgrid-hdiv,#gbox_jqg-main .ui-jqgrid-bdiv table,#gview_jqg-main,#gbox_jqg-main .ui-jqgrid-hdiv .ui-jqgrid-hbox table").attr("style","width:100%;");
-			$("#jqg-main,table[aria-labelledby=gbox_jqg-main]").attr("style","width:550px;");
-			$("#gbox_jqg-main .ui-jqgrid-bdiv").attr("style","width:100%;height:220px;");
+			 $("#gbox_jqg-main,#gbox_jqg-main .ui-jqgrid-hdiv,#gbox_jqg-main .ui-jqgrid-bdiv table,#gview_jqg-main").attr("style","width:100%;");
+			$("#jqg-main,table[aria-labelledby=gbox_jqg-main]").attr("style","width:100%;");
+			$("#gbox_jqg-main .ui-jqgrid-bdiv").attr("style","width:100%;height:220px;"); 
 			$("#changeUser").modal("show");
 		}
 		function changeU(param){
@@ -322,8 +320,7 @@
 							SetCookie("username",data.username,7);
 							$("#changeUser").modal("hide");
 							alert(data.msg);
-							refresh();	
-							//location.href=getContextPath()+"/html/main.html";
+							location.href=getContextPath()+"/html/main.html";
 							
 						}
 					}
@@ -482,11 +479,6 @@
 					alert(textStatus);
 				},
 				success : function(data) {
-					   //if(data.length>0){
-						//for(var i=0;i<data.length;i++){   
-					 　　　　 	//alert(JSON.stringify(data));
-  						//}
-  					   //} 
   					   loadmenu("qiuer-menu",data);
 					   $("#sidebar-loader").loader("hide","<i class=\"fa fa-4x fa-spinner fa-spin\"></i>");
   					   setinit();
@@ -497,8 +489,8 @@
 	  
 	   function refresh(){
 			getUserName();
-			getActions();
 			getMenus();
+			getActions();
 		}
 	</script>
 </body>
