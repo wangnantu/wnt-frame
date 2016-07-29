@@ -125,4 +125,10 @@
       createTime = #{createtime,jdbcType=TIMESTAMP}
     where userid = #{userid,jdbcType=VARCHAR}
   </update>
+  
+  <select id="selectALL" resultMap="BaseResultMap">
+  		SELECT  
+  		<include refid="Base_Column_List" />
+  		 FROM rbac_user order by userid
+  </select>
 </mapper>

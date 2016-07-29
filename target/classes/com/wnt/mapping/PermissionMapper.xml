@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wnt.dao.IPermissionDao">
+  <resultMap id="BaseResultMap" type="com.wnt.domain.Permission">
+    <result column="userid" jdbcType="VARCHAR" property="userid" />
+    <result column="menuid" jdbcType="INTEGER" property="menuid" />
+    <result column="actionid" jdbcType="INTEGER" property="actionid" />
+    <result column="actionname" jdbcType="VARCHAR" property="actionname" />
+  </resultMap>
+  <sql id="Base_Column_List">
+  	userid,menuid,actionid,actionname
+  </sql>
+  <select id="selectActionsByUserid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from v_permission
+    where userid = #{userid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectActionsByUseridAndMenuid"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from v_permission
+    where userid = #{0} and menuid = #{1}
+  </select>
+  
+</mapper>
