@@ -482,19 +482,19 @@
 					alert(textStatus);
 				},
 				success : function(data) {
-					   if(data.length>0){
-						for(var i=0;i<data.length;i++){   
-					 　　　　 	//alert(data[i].menuname);
-  						}
-  					   } 
-  					   
+					   //if(data.length>0){
+						//for(var i=0;i<data.length;i++){   
+					 　　　　 	//alert(JSON.stringify(data));
+  						//}
+  					   //} 
+  					   loadmenu("qiuer-menu",data);
+					   $("#sidebar-loader").loader("hide","<i class=\"fa fa-4x fa-spinner fa-spin\"></i>");
+  					   setinit();
 				}
 			});
 		
 	   }
-	   function loadMenu(){
-	   		
-	   }
+	  
 	   function refresh(){
 			getUserName();
 			getActions();
