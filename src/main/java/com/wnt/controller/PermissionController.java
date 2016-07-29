@@ -76,7 +76,7 @@ public class PermissionController {
     		}
     	}
     	json+="]";
-    	logger.info(json);
+    	logger.debug(json);
 		return json;
 	}
 }
