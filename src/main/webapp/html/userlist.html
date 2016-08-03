@@ -1,0 +1,594 @@
+<!doctype html>
+<html>
+<head>
+	<title>用户列表</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../css/bootstrap.css">
+	<link rel="stylesheet" href="../css/ui.jqgrid-bootstrap.css">
+	<link rel="stylesheet" href="../css/font-awesome.css">
+	<link rel="stylesheet" href="../css/flyPanels.css">
+	<link rel="stylesheet" href="../css/bootstrap-select.css">
+	<link rel="stylesheet" href="../css/bootstrapValidator.css"/>
+
+</head>
+
+<body>
+	  <div class="flypanels-container preload">
+
+		<div class="flypanels-main">
+			<div class="flypanels-topbar" style="background-color: #d2d6de;">
+				
+				<a class="flypanels-button-left icon-menu" href="#infoModal" style="color: #666666" data-toggle="modal" data-placement="bottom" title="新增"><b><i class="fa fa-plus"></i></a>
+				<a class="flypanels-button-left icon-menu" href="javascript:upd();" style="color: #666666" data-toggle="modal" data-placement="bottom" title="修改"><i class="fa fa-edit"></i></a>
+				<a class="flypanels-button-left icon-menu" href="javascript:del();" style="color: #666666" data-toggle="modal" data-placement="bottom" title="删除"><i class="fa fa-trash-o"></i></a>
+				<a class="flypanels-button-left icon-menu" href="javascript:refreshData();" style="color: #666666" data-toggle="tooltip" data-placement="bottom" title="刷新"><i class="fa fa-refresh"></i></a>
+				<a class="flypanels-button-left icon-menu" href="javascript:toggleToolbar();" style="color: #666666" data-toggle="tooltip" data-placement="bottom" title="筛选"><i class="fa fa-thumb-tack"></i></a>
+
+			</div>
+			<div class="flypanels-content" align="center">
+				<table id="jqg-main"></table>
+				<div id="jqg-main-pager"></div>
+			</div>
+		</div>
+		
+	  </div>
+  
+
+	<div class="modal fade bs-example-modal-md" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<i class="fa fa-close"></i>
+					</button>
+					<h4 class="modal-title" id="infoModalLabel"><b>新增</b></h4>
+				</div><!-- modal-header -->
+			<div class="modal-body">
+			<form class="form-horizontal" id="infoForm">
+				<!-- 代码自动生成 -->
+					<div class="row" style="margin-left: 10px; margin-right: 10px; ">
+				
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 control-label">用户代码<font color="red">&nbsp;*</font></label>
+					<div class="col-xs-12 col-sm-4">
+						  <input type="text" class="form-control" id="dtl-userid" > 
+					</div>
+					<label class="col-xs-12 col-sm-2 control-label">用户姓名<font color="red">&nbsp;*</font></label>
+					<div class="col-xs-12 col-sm-4">
+						 <input type="text" class="form-control" id="dtl-username"> 
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 control-label">密码<font color="red">&nbsp;*</font></label>
+					<div class="col-xs-12 col-sm-4">
+						 <input type="text" class="form-control" id="dtl-password"> 
+					</div>
+					<label class="col-xs-12 col-sm-2 control-label">状态<font color="red">&nbsp;*</font></label>
+					<div class="col-xs-12 col-sm-4">
+						<select class="form-control" id="dtl-status" >
+							<option value="1" selected>活跃</option>
+							<option value="0" >停用</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 control-label">手机<font color="red">&nbsp;*</font></label>
+					<div class="col-xs-12 col-sm-4">
+						<input type="text" class="form-control" id="dtl-mobile"> 
+					</div>
+					<label class="col-xs-12 col-sm-2 control-label">电子邮件<font color="red">&nbsp;*</font></label>
+					<div class="col-xs-12 col-sm-4">
+						<input type="text" class="form-control" id="dtl-email"> 
+					</div>
+				</div>
+				<div class="form-group">
+					
+					<label class="col-xs-12 col-sm-2 control-label">联系电话<font color="red">&nbsp;*</font></label>
+					<div class="col-xs-12 col-sm-4">
+						 <input type="text" class="form-control" id="dtl-telephone"> 
+					</div>
+					<label class="col-xs-12 col-sm-2 control-label">备注</label>
+					<div class="col-xs-12 col-sm-4">
+						 <input type="text" class="form-control" id="dtl-remark"> 
+					</div>
+				</div>
+	
+				</div>
+				<!-- 代码自动生成 -->					
+			</form>
+					</div><!-- modal-body -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="submit" class="btn btn-primary" onclick="addTemplate();">确定</button>
+					</div><!-- modal-footer -->
+				</div><!-- modal-content -->
+			</div><!-- modal-dialog -->
+		</div><!-- modal -->
+
+	<div class="modal fade bs-example-modal-md" id="updModal"
+		tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<i class="fa fa-close"></i>
+					</button>
+					<h4 class="modal-title" id="updModalLabel">编辑</h4>
+				</div>
+				<!-- modal-header -->
+				<div class="modal-body">
+					<form class="form-horizontal" id="updForm">
+						<!-- 代码自动生成 -->
+						<div class="row" style="margin-left: 10px; margin-right: 10px; ">
+
+							<div class="form-group">
+					<label class="col-xs-12 col-sm-2 control-label">用户代码<font color="red">&nbsp;*</font></label>
+					<div class="col-xs-12 col-sm-4">
+						  <input type="text" class="form-control" id="upd-userid" > 
+					</div>
+					<label class="col-xs-12 col-sm-2 control-label">用户姓名<font color="red">&nbsp;*</font></label>
+					<div class="col-xs-12 col-sm-4">
+						 <input type="text" class="form-control" id="upd-username"> 
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 control-label">密码<font color="red">&nbsp;*</font></label>
+					<div class="col-xs-12 col-sm-4">
+						 <input type="text" class="form-control" id="upd-password"> 
+					</div>
+					<label class="col-xs-12 col-sm-2 control-label">状态<font color="red">&nbsp;*</font></label>
+					<div class="col-xs-12 col-sm-4">
+						<select class="form-control" id="upd-status" >
+							<option value="1" selected>活跃</option>
+							<option value="0" >停用</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 control-label">手机<font color="red">&nbsp;*</font></label>
+					<div class="col-xs-12 col-sm-4">
+						<input type="text" class="form-control" id="upd-mobile"> 
+					</div>
+					<label class="col-xs-12 col-sm-2 control-label">电子邮件<font color="red">&nbsp;*</font></label>
+					<div class="col-xs-12 col-sm-4">
+						<input type="text" class="form-control" id="upd-email"> 
+					</div>
+				</div>
+				<div class="form-group">
+					
+					<label class="col-xs-12 col-sm-2 control-label">联系电话<font color="red">&nbsp;*</font></label>
+					<div class="col-xs-12 col-sm-4">
+						 <input type="text" class="form-control" id="upd-telephone"> 
+					</div>
+					<label class="col-xs-12 col-sm-2 control-label">备注</label>
+					<div class="col-xs-12 col-sm-4">
+						 <input type="text" class="form-control" id="upd-remark"> 
+					</div>
+				</div>
+						</div>
+						<!-- 代码自动生成 -->
+					</form>
+				</div>
+				<!-- modal-body -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="submit" class="btn btn-primary"
+						onclick="updTemplate();">确定</button>
+				</div>
+				<!-- modal-footer -->
+			</div>
+			<!-- modal-content -->
+		</div>
+		<!-- modal-dialog -->
+	</div>
+	<!-- modal -->
+
+	<div class="modal fade" id="delModal" >  
+		<div class="modal-dialog">  
+			<div class="modal-content message_align">  
+			    <div class="modal-header">  
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>  
+			        <h4 class="modal-title">提示信息</h4>  
+			    </div>  
+			    <div class="modal-body">  
+			        <p>您确认要删除吗？</p>  
+			    </div>  
+			    <div class="modal-footer">  
+			        <input type="hidden" id="url"/>  
+			        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>  
+			        <a onclick="delTemplate();" class="btn btn-success" data-dismiss="modal">确定</a>  
+			    </div>  
+			</div> 
+		</div> 
+	</div>
+	
+		
+	<script src="../js/jquery.js"></script>
+	<script src="../js/bootstrap.js"></script>
+	<script src="../js/bootstrapValidator.js"></script>
+	<script src="../js/grid.locale-cn.js"></script>
+	<script src="../js/jquery.jqGrid.js"></script>
+	<script src="../js/flypanels.js"></script>
+	<script src="../js/bootstrap-select.js"></script>
+	
+	<script type="text/javascript" language="javascript">
+
+		function getContextPath(){ 
+			var pathName = document.location.pathname; 
+			var index = pathName.substr(1).indexOf("/"); 
+			var result = pathName.substr(0,index+1); 
+			return result; 
+		} 
+	</script> 
+	
+	<script>
+		$.jgrid.defaults.styleUI = 'Bootstrap';
+		var mydata;
+		var mygrid;
+		$(document).ready(function () {
+			$.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
+				mygrid = $("#jqg-main").jqGrid({
+				url: getContextPath()+"/user/extendlist",
+				mtype: "POST",
+				ajaxGridOptions: { contentType: "application/json; charset=utf-8" },
+				datatype : "json",
+				
+				//datatype : "local",
+				//data : mydata,
+				width: "100%",
+				height: "50%",
+				shrinkToFit: true,
+				colModel: [
+					{ label: "用户代码", name: "userid", width: 100, align: "center",  key:true },
+					{ label: "用户姓名", name: "username", width: 100, align: "center" },
+					{ label: "状态", name: "status", width: 80, align: "center" },
+					{ label: "联系电话", name: "telephone", width: 160, align: "center" },
+					{ label: "电子邮件", name: "email", width: 200, align: "center" },
+				],
+				sortable: true,
+				rowNum: 10,
+				rowList : [10],
+				rownumbers: true, // grouping 冲突
+				pgbuttons : true,
+				pager:"#jqg-main-pager",
+				viewrecords: true, // show the current page, data rang and total records on the toolbar
+				//sortname : "clientid",
+				loadonce: true,
+				jsonReader : {
+					root:"rows",
+					page: "page",
+					total: "total",
+					records: "records",
+					cell: "cell",
+					id: "id",
+					repeatitems: true
+				},
+				onSelectRow : function(){
+				
+					var gr = $("#jqg-main").jqGrid('getGridParam', 'selrow');
+					
+					var rowData = $("#jqg-main").jqGrid("getRowData",gr);
+					
+					$("#content")[0].contentWindow.reloadData(rowData.id);
+					
+					$("#content").contents().find("#dtl-templateid").val(rowData.id);
+					$("#content").contents().find("#dtl-templateid").attr("disabled",true);
+					$("#content").contents().find("#dtl-msgtype").val(rowData.msgtype);
+					$("#content").contents().find("#dtl-msgtype").attr("disabled",true);
+					$("#content")[0].contentWindow.setContentForm();
+			
+					}
+			});
+			$("#jqg-main").jqGrid('setGroupHeaders', {
+				useColSpanStyle: true
+			});
+			$("#jqg-main").jqGrid('filterToolbar');
+			$("#jqg-main").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
+			$("#jqg-main").closest(".ui-jqgrid-view").css({ "overflow-x" : "hidden" });
+			toggleToolbar();
+			
+			 $("#infoForm").bootstrapValidator({
+		        message: 'This value is not valid',
+		        feedbackIcons: {
+		            valid: 'glyphicon glyphicon-ok',
+		            invalid: 'glyphicon glyphicon-remove',
+		            validating: 'glyphicon glyphicon-refresh'
+		        },
+		        fields: {
+		            agentid: {
+		                validators: {
+		                    notEmpty: {
+		                        message: 'agentid is required and cannot be empty'
+		                    }
+		                }
+		            },
+		            templateName: {
+		                validators: {
+		                    notEmpty: {
+		                        message: 'templateName is required and cannot be empty'
+		                    }
+		                }
+		            }
+		        }
+		    });
+		    
+		    $("#updForm").bootstrapValidator({
+		        message: 'This value is not valid',
+		        feedbackIcons: {
+		            valid: 'glyphicon glyphicon-ok',
+		            invalid: 'glyphicon glyphicon-remove',
+		            validating: 'glyphicon glyphicon-refresh'
+		        },
+		        fields: {
+		            agentid: {
+		                validators: {
+		                    notEmpty: {
+		                        message: 'agentid is required and cannot be empty'
+		                    }
+		                }
+		            },
+		            templateName: {
+		                validators: {
+		                    notEmpty: {
+		                        message: 'templateName is required and cannot be empty'
+		                    }
+		                }
+		            }
+		        }
+		    });
+		});
+	</script>
+	
+	<script>
+		document.addEventListener("DOMContentLoaded", function(event) {
+		
+		});
+	</script>
+	<script>
+	
+		
+	</script>
+	
+	<script>
+		function addTemplate() {
+		
+			$("#infoForm").data("bootstrapValidator").validate();
+			if(!$("#infoForm").data("bootstrapValidator").isValid()){
+                return false;
+            }
+			var touser = "";
+			$("#dtl-touser option:selected").each(function (){
+				touser += $(this).val()+"|";
+			});
+			
+			var toparty = "";
+			$("#dtl-toparty option:selected").each(function (){
+				toparty += $(this).val()+"|";
+			});
+			
+			var totag = "";
+			$("#dtl-totag option:selected").each(function (){
+				totag += $(this).val()+"|";
+			});
+			
+			var json =  {
+						"touser" :touser.substring(0, touser.length-1),
+						"toparty" : toparty.substring(0, toparty.length-1),
+						"totag" : totag.substring(0, totag.length-1),
+						"agentid" : parseInt($("#dtl-agentid").val()),
+						"msgtype" : $("#dtl-msgtype").val(),
+						"safe" : $("#dtl-safe").val(),
+						"templateName":$("#dtl-templateName").val()
+    				};
+        	$.ajax({
+        		data : JSON.stringify(json),
+				type : "POST",
+				contentType : "application/json; charset=utf-8",
+				dataType : "json",
+				url : getContextPath()+"/messagetemplate/saveTemplate",
+				error : function() {
+					alert("error");
+				},
+				success : function(data) {
+				
+					if(data.success == "true"){
+					 alert("success");
+					
+						
+						$("#dtl-touser").val("");
+						$("#dtl-toparty").val("");
+						$("#dtl-totag").val("");
+						$("#dtl-agentid").val("");
+						$("#dtl-msgtype").val("text");
+						$("#dtl-safe").val("0");
+						$("#dtl-templateName").val("");
+						$('.selectpicker').selectpicker('refresh');
+						$("#infoModal").modal('hide');
+						
+						refreshData();
+						
+					}
+				}
+            });
+        }
+        
+	</script>
+	<script>
+		function upd(){
+			var gr = $("#jqg-main").jqGrid('getGridParam', 'selrow');
+			if(gr!=null){
+			
+			var rowData = $("#jqg-main").jqGrid("getRowData",gr);
+			
+			var userSelector = document.getElementById("upd-touser");
+			var touser = rowData.touser.split('|');
+				for(var j=0;j< userSelector.options.length;j++) {  
+					userSelector.options[j].selected = false;
+					for(var i=0;i<touser.length;i++){
+            			if(userSelector.options[j].value == touser[i]) {  
+              			 userSelector.options[j].selected = true;  
+               			 break;  
+           			 	}  
+         		 	}  
+        		}
+        		
+        	var departmentSelector = document.getElementById("upd-toparty");
+        	var toparty = rowData.toparty.split('|');
+        		for(var j=0;j< departmentSelector.options.length;j++) {  
+					departmentSelector.options[j].selected = false;
+					for(var i=0;i<toparty.length;i++){
+            			if(departmentSelector.options[j].value == toparty[i]) {  
+              			 departmentSelector.options[j].selected = true;  
+               			 break;  
+           			 	}  
+         		 	}  
+        		}
+        		
+        	var tagSelector = document.getElementById("upd-totag");
+			var totag = rowData.totag.split('|');
+				for(var j=0;j< tagSelector.options.length;j++) {  
+					tagSelector.options[j].selected = false;
+					for(var i=0;i<totag.length;i++){
+            			if(tagSelector.options[j].value == totag[i]) {  
+              			 tagSelector.options[j].selected = true;  
+               			 break;  
+           			 	}  
+         		 	}  
+        		}
+        	
+        $('.selectpicker').selectpicker('refresh');
+			
+				
+			$("#upd-id").val(rowData.id);
+			$("#upd-id").attr("disabled",true);
+			$("#upd-agentid").val(rowData.agentid);
+			$("#upd-msgtype").val(rowData.msgtype);
+			$("#upd-safe").val(rowData.safe);
+			$("#upd-templateName").val(rowData.templateName);
+			$("#updModal").modal("show");
+			}else{
+			alert("请选择一行数据！");
+			}
+		}
+		
+		function updTemplate(){
+		
+			$("#updForm").data("bootstrapValidator").validate();
+			if(!$("#updForm").data("bootstrapValidator").isValid()){
+                return false;
+            }
+			var touser = "";
+			$("#upd-touser option:selected").each(function (){
+				touser += $(this).val()+"|";
+			});
+			
+			var toparty = "";
+			$("#upd-toparty option:selected").each(function (){
+				toparty += $(this).val()+"|";
+			});
+			
+			var totag = "";
+			$("#upd-totag option:selected").each(function (){
+				totag += $(this).val()+"|";
+			});
+			var json =  {
+						"id":$("#upd-id").val(),
+						"touser" : touser.substring(0, touser.length-1),
+						"toparty" : toparty.substring(0, toparty.length-1),
+						"totag" : totag.substring(0, totag.length-1),
+						"agentid" : parseInt($("#upd-agentid").val()),
+						"msgtype" : $("#upd-msgtype").val(),
+						"safe" : $("#upd-safe").val(),
+						"templateName":$("#upd-templateName").val()
+    				};
+    				
+    				$.ajax({
+		        		data : JSON.stringify(json),
+						type : "POST",
+						contentType : "application/json; charset=utf-8",
+						dataType : "json",
+						url : getContextPath()+"/messagetemplate/updTemplate",
+						error : function() {
+							alert("error");
+						},
+						success : function(data) {
+						
+							if(data.success == "true"){
+							 alert("success");
+							 $("#updModal").modal('hide');
+							 refreshData();
+						}
+					}
+            	});
+			}
+		
+	</script>
+	<script>
+	
+		function del(){
+			var gr = $("#jqg-main").jqGrid('getGridParam', 'selrow');
+			if(gr!=null){
+			$("#delModal").modal("show");
+			}else{
+			alert("请选择一行数据！");
+			}
+		
+		}
+		function delTemplate(){
+		
+			var gr = $("#jqg-main").jqGrid('getGridParam', 'selrow');
+			if(gr!=null){
+				var rowData = $("#jqg-main").jqGrid("getRowData",gr);
+			 	var id = rowData.id;
+      			$.ajax({
+        		data : JSON.stringify({"id": parseInt(id)}),
+				type : "POST",
+				contentType : "application/json; charset=utf-8",
+				dataType : "json",
+				url : getContextPath()+"/messagetemplate/delTemplate",
+				error : function() {
+					alert("error");
+				},
+				success : function(data) {
+				
+					if(data.success == "true"){
+					 alert("success");
+					
+						refreshData();
+						
+					}
+				}
+            });
+            }else{
+            $("#delModal").modal("hide");
+        		alert("允许选择一行数据！");
+        	}
+ 		}
+	
+	
+	</script>
+	
+	<script>
+		$(document).ready(function () {
+		
+		  $('.selectpicker').selectpicker({
+            });
+            getContextPath();
+             loadUser();
+             loadDepartment();
+             loadTag();
+		});
+		function refreshData() {
+			$("#jqg-main").setGridParam({datatype: "json" });
+			$("#jqg-main").trigger("reloadGrid");
+			
+			$("#content")[0].contentWindow.reloadData(0);
+    	}
+		function toggleToolbar() {
+    		$("#jqg-main")[0].toggleToolbar();
+    	}
+    </script>
+</body>
+</html>

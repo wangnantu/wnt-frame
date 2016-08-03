@@ -28,6 +28,8 @@
 	<filter-mapping>
 		<filter-name>loginFilter</filter-name>
 		<url-pattern>/html/*</url-pattern>
+		<url-pattern>/user/*</url-pattern>
+		<url-pattern>/permission/*</url-pattern>
 	</filter-mapping>  
     <listener>  
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>  
