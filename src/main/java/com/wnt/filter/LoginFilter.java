@@ -32,7 +32,7 @@ public class LoginFilter implements Filter {
 		String contextPath = request.getContextPath();
 		String url = path.substring(contextPath.length());
 		Object user = session.getAttribute("userid");
-		if ( "/html/404.html".equals(url)  || "/html/500.html".equals(url) ) {
+		if ( "/html/404.html".equals(url)  || "/html/500.html".equals(url) ||"/user/login".equals(url)) {
 			filterChain.doFilter(request, response);
 			return;
 		}

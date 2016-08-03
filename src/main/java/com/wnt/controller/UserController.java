@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.wnt.util.JsonUtil;
 import com.wnt.domain.User;
+import com.wnt.domain.UserExtend;
 import com.wnt.model.UserVO;
 import com.wnt.service.IUserService;
 import com.wnt.util.MD5Util;
@@ -135,6 +137,31 @@ import com.wnt.util.MD5Util;
 	    	}
 	    	json+="]";
 			return json;
+	    }
+	    
+	    @RequestMapping(value="/extendlist" ,produces= "application/json;charset=UTF-8")
+		@ResponseBody  
+		public String getUserExtendList(){
+	    	List<UserExtend> userList = this.userService.getAllUserExtends();
+//	    	String json = "[";
+//	    	for(int i=0;i<userList.size();i++){
+//	    		String userid = userList.get(i).getUserid();
+//		    	String username = userList.get(i).getUsername();
+//		    	if(i != userList.size()-1){
+//	    		json+="{\"userid\":\""+userid+"\",\"username\":\""+username+"\"},";
+//		    	}else{
+//		    		json+="{\"userid\":\""+userid+"\",\"username\":\""+username+"\"}";
+//		    	}
+//	    	}
+//	    	json+="]";
+	    	String json = JsonUtil.obj2json(userList);
+	    	String jsondata = "{\"page\":\"1\"," +
+			        "      \"total\":1," +
+			        "      \"records\":\"2\"," +
+			        "      \"rows\":"  + json +
+			        "    }";
+
+			return jsondata;
 	    }
 		
 	  private Boolean verifyPassword(String inputuserid,String inputpassword){

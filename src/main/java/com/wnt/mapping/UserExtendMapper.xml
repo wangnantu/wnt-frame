@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wnt.dao.IUserExtendDao">
+  <resultMap id="BaseResultMap" type="com.wnt.domain.UserExtend">
+    <result column="userid" jdbcType="VARCHAR" property="userid" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    userid, username, password, status, mobile, email, telephone, remark
+  </sql>
+  <select id="selectALLExtend" resultMap="BaseResultMap">
+  		SELECT  
+  		<include refid="Base_Column_List" />
+  		 FROM v_userextend
+  </select>
+   <insert id="insert" parameterType="com.wnt.domain.UserExtend">
+    insert into rbac_userextendinfo (userid, username, mobile, 
+      email, telephone, remark, 
+      creatorId, createTime)
+    values (#{userid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{pswdsalt,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{creatorid,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP})
+  </insert>
+</mapper>
