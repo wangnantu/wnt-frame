@@ -167,7 +167,7 @@
     from v_usermenu
     where userid = #{userid,jdbcType=VARCHAR}
   </select>
-  <select id="getSoncnt" parameterType="java.lang.Integer" resultType="Integer">
-  		SELECT COUNT(*) soncnt FROM rbac_menu WHERE menuid in (SELECT menuid FROM v_usermenu WHERE userid = 'sysadmin') and parentid = #{menuid,jdbcType=INTEGER}
+  <select id="getSoncnt" resultType="Integer">
+  		SELECT COUNT(*) soncnt FROM rbac_menu WHERE menuid in (SELECT menuid FROM v_usermenu WHERE userid = #{0}) and parentid = #{1}
   </select>
 </mapper>

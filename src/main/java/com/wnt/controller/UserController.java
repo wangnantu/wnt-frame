@@ -143,17 +143,6 @@ import com.wnt.util.MD5Util;
 		@ResponseBody  
 		public String getUserExtendList(){
 	    	List<UserExtend> userList = this.userService.getAllUserExtends();
-//	    	String json = "[";
-//	    	for(int i=0;i<userList.size();i++){
-//	    		String userid = userList.get(i).getUserid();
-//		    	String username = userList.get(i).getUsername();
-//		    	if(i != userList.size()-1){
-//	    		json+="{\"userid\":\""+userid+"\",\"username\":\""+username+"\"},";
-//		    	}else{
-//		    		json+="{\"userid\":\""+userid+"\",\"username\":\""+username+"\"}";
-//		    	}
-//	    	}
-//	    	json+="]";
 	    	String json = JsonUtil.obj2json(userList);
 	    	String jsondata = "{\"page\":\"1\"," +
 			        "      \"total\":1," +
@@ -162,6 +151,20 @@ import com.wnt.util.MD5Util;
 			        "    }";
 
 			return jsondata;
+	    }
+	    
+	    @RequestMapping(value="/saveextend" ,method = RequestMethod.GET,consumes="application/json;charset=UTF-8", produces= "application/json;charset=UTF-8")
+		@ResponseBody
+		public Map<String,String> saveUserExtend(HttpServletRequest request, HttpServletResponse response){
+	    	Map<String, String> map = new HashMap<String, String>();
+	    	Map<String, Object> paramMap = getResultMap(request);
+	    	String username = request.getParameter("username");
+	    	logger.info(username);
+	    	int r = this.userService.saveUserExtend(paramMap);
+	    	logger.debug(r);
+	    	map.put("code", "0");
+    		map.put("msg", "保存成功");
+	    	return map;
 	    }
 		
 	  private Boolean verifyPassword(String inputuserid,String inputpassword){
@@ -179,7 +182,7 @@ import com.wnt.util.MD5Util;
 	  }
 	  
 	  private Map<String, Object> getResultMap(HttpServletRequest request) {
-			 Map<String, String[]> map = request.getParameterMap();
+			Map<String, String[]> map = request.getParameterMap();
 			Map<String,Object> mapParams = new HashMap<String,Object>();
 			for (Entry<String, String[]> entry : map.entrySet()) {
 					String[] arr = entry.getValue();

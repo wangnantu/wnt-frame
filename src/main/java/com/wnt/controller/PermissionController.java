@@ -68,7 +68,7 @@ public class PermissionController {
     		String menuname = menu.getMenuname();
     		String url = menu.getUrl();
     		String icon = menu.getIcon();
-    		int soncnt = menuService.getSoncnt(menuid);
+    		int soncnt = menuService.getSoncnt(userid,menuid);
     		if(i != menuList.size()-1){
     			json+="{\"menuid\":\""+menuid+"\",\"parentid\":\""+parentid+"\",\"menuname\":\""+menuname+"\",\"url\":\""+url+"\",\"icon\":\""+icon+"\",\"soncnt\":\""+soncnt+"\"},";
     		}else{

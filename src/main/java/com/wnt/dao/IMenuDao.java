@@ -19,5 +19,5 @@ public interface IMenuDao {
     
     List<Integer> selectMenusByUserid(String userid);
     
-    int getSoncnt(Integer menuid);
+    int getSoncnt(String userid,Integer menuid);
 }

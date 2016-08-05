@@ -14,17 +14,25 @@
   <sql id="Base_Column_List">
     userid, username, password, status, mobile, email, telephone, remark
   </sql>
+  <parameterMap type="map" id="userextendmap">    
+   <parameter property="userid" jdbcType="VARCHAR" mode="IN"/>    
+   <parameter property="username" jdbcType="VARCHAR" mode="IN"/>    
+   <parameter property="password" jdbcType="VARCHAR" mode="IN"/>    
+   <parameter property="status" jdbcType="CHAR" mode="IN"/>    
+   <parameter property="mobile" jdbcType="VARCHAR" mode="IN"/>    
+   <parameter property="email" jdbcType="VARCHAR" mode="IN"/> 
+   <parameter property="telephone" jdbcType="VARCHAR" mode="IN"/>    
+   <parameter property="remark" jdbcType="VARCHAR" mode="IN"/> 
+   <parameter property="creatorId" jdbcType="VARCHAR" mode="IN"/>        
+ </parameterMap>    
   <select id="selectALLExtend" resultMap="BaseResultMap">
   		SELECT  
   		<include refid="Base_Column_List" />
   		 FROM v_userextend
   </select>
-   <insert id="insert" parameterType="com.wnt.domain.UserExtend">
-    insert into rbac_userextendinfo (userid, username, mobile, 
-      email, telephone, remark, 
-      creatorId, createTime)
-    values (#{userid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{pswdsalt,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, #{remark,jdbcType=VARCHAR}, 
-      #{creatorid,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP})
+   <insert id="insertUserExtend" parameterMap="userextendmap" statementType="CALLABLE">
+    	{call p_insertUserExtend(
+    	?,?,?,?,?,?,?,?,?)
+    	}
   </insert>
 </mapper>

@@ -23,11 +23,11 @@ public class MenuServiceImpl implements IMenuService {
 	}
 
 	@Override
-	public int getSoncnt(int menuid) {
+	public int getSoncnt(String userid,int menuid) {
 		if(0 == menuid){
 			return 0;
 		}else{
-			return this.menuDao.getSoncnt(menuid);
+			return this.menuDao.getSoncnt(userid,menuid);
 		}
 	}
 	

@@ -8,7 +8,7 @@ public interface IMenuService {
 	
 	public Menu getMenuById(int menuid);
 	
-	public int getSoncnt(int menuid);
+	public int getSoncnt(String userid,int menuid);
 
 	List<Integer> getMenusByUserid(String userid);
 	

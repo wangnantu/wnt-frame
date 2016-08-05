@@ -1,6 +1,7 @@
 package com.wnt.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -48,4 +49,9 @@ public class UserServiceImpl implements IUserService {
 		return this.userextendDao.selectALLExtend();
 	}
 
+	@Override
+	public int saveUserExtend(Map<String,Object> map){
+		
+		return this.userextendDao.insertUserExtend(map);
+	}
 }

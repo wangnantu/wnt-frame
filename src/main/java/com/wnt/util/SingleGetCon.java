@@ -46,7 +46,7 @@ public final class SingleGetCon {
  
     static {
         try {
-    		xmlPath = File.separator+ getProjectPath()
+    		xmlPath = File.separator+ "wnt" +File.separator
 			+ "WEB-INF"+File.separator+"classes"+File.separator+"spring-mybatis.xml";
 			saxreder = new SAXReader();
 			saxreder.setEntityResolver(new IgnoreDTDEntityResolver());
@@ -91,7 +91,7 @@ public final class SingleGetCon {
     public static String getProjectPath() {
 		String projectPath = Thread.currentThread().getContextClassLoader()
 				.getResource("").getPath();
-
+		System.out.println(projectPath);
 		projectPath = projectPath.substring(1);
 		projectPath = projectPath.substring(0, projectPath.indexOf("WEB-INF"));
 
