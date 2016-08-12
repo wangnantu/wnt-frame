@@ -17,10 +17,10 @@
   		<div class="col-sm-3">
   		</div>
 		<div class="col-sm-6" >
-            <form enctype="multipart/form-data" action="<%=path%>/material/upload" method="post">
+            <form enctype="multipart/form-data" action="" method="post">
                 
                 <div class="form-group">
-                    <input id="file-0" type="file" name="file" multiple class="file" data-overwrite-initial="false" data-min-file-count="1" data-max-file-count="1"/>
+                    <input id="file-0" type="file" name="file" class="file" data-overwrite-initial="false" data-min-file-count="1" data-max-file-count="1"/>
                 </div>
                 
                 <div class="control-group" style="display:none;">
@@ -48,15 +48,10 @@
 	  
 	    $("#file-0").fileinput({
 	    	language: 'zh', 
-	        uploadUrl: '/gtjaqh-weixin/material/uploadfile', // you must set a valid URL here else you will get an error
+	        uploadUrl: '/wnt/file/upload', 
 	        allowedFileExtensions : ['xls','xlsx'],
 	        overwriteInitial: false,
-	        maxFileSize: 1000,
-	        maxFilesNum: 10,
-	        //allowedFileTypes: ['image', 'video', 'flash'],
-	        slugCallback: function(filename) {
-	            return filename.replace('(', '_').replace(']', '_');
-	        }
+	        maxFileSize: 1000
 		});
 		
 		 $("#file-0").on("fileuploaded", function (event, data, previewId, index) {
