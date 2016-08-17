@@ -11,18 +11,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.dao.DataAccessException;
 
-import com.wnt.util.ResultInfo;
-import com.esimple.m_sec.iReport.po.EBSDYNRPTIMG;
-import com.esimple.m_sec.iReport.po.EBSDYNRPTIMGCOLS;
-import com.esimple.m_sec.iReport.po.EbsDynrptBatchpara;
-import com.esimple.m_sec.iReport.po.EbsDynrptBpara;
-import com.esimple.m_sec.iReport.po.EbsDynrptPagepara;
-import com.esimple.m_sec.iReport.po.Ebsdynimpbpara;
-import com.esimple.m_sec.iReport.po.Ebsdynimpcparam;
-import com.esimple.m_sec.iReport.po.Ebsdynimpexesql;
-import com.esimple.m_sec.iReport.po.Ebsdynimpfind;
-import com.esimple.m_sec.iReport.po.Ebsdynimphpara;
-import com.esimple.m_sec.iReport.po.Ebsdynrptmsgpara;
+import com.wnt.ireport.model.ResultInfo;
+import com.wnt.ireport.po.EbsDynrptImg;
+import com.wnt.ireport.po.EbsDynrptImgcols;
+import com.wnt.ireport.po.EbsDynrptBatchpara;
+import com.wnt.ireport.po.EbsDynrptBpara;
+import com.wnt.ireport.po.EbsDynrptPagepara;
+import com.wnt.ireport.po.EbsDynimpBpara;
+import com.wnt.ireport.po.EbsDynimpCparam;
+import com.wnt.ireport.po.EbsDynimpExesql;
+import com.wnt.ireport.po.EbsDynimpFind;
+import com.wnt.ireport.po.EbsDynimpHpara;
+import com.wnt.ireport.po.EbsDynrptMsgpara;
 
 
 /**
@@ -61,7 +61,7 @@ public interface iReportManageDAO {
 	//保存动态报表参数
 	public ResultInfo saverptpara(String curruserid,String reqip,EbsDynrptBpara dynrptb, List<String[][]> dynrpt_hpara,
 			String subprt,String sheetname,String jxmls,String mjxmls,String ismjxmls,List<String[][]> dynrptbatchparam,List<String[][]> dynrptprintparam,TreeMap pagesqlmap,
-			Ebsdynrptmsgpara dyncSendMsg,EBSDYNRPTIMG ebsdynimg,List<String[]> dyncimgcols,List<String[]> shttnamelist,String dynbodys) throws DataAccessException;
+			EbsDynrptMsgpara dyncSendMsg,EbsDynrptImg ebsdynimg,List<String[]> dyncimgcols,List<String[]> shttnamelist,String dynbodys) throws DataAccessException;
 	//查询动态报表参数
 	public EbsDynrptBpara getdynrptbpara(String table,String reportid)throws DataAccessException;
 	//查询动态报表查询条件
@@ -70,13 +70,13 @@ public interface iReportManageDAO {
 	public List getdynrptComboxList(String combsql,String curruserid,String departId)throws DataAccessException;
 	
 	//查询报表图表参数
-	public EBSDYNRPTIMG getdynrptimg(String table,String reportid)throws DataAccessException;
+	public EbsDynrptImg getdynrptimg(String table,String reportid)throws DataAccessException;
 	//查询报表图表设置参数
-	public EBSDYNRPTIMGCOLS getdynrptimgcols(String table,String reportid)throws DataAccessException;
+	public EbsDynrptImgcols getdynrptimgcols(String table,String reportid)throws DataAccessException;
 	//取得图表参数,显示格式转换
 	public List getdynrptimgcolslist(String reportid) throws DataAccessException;
 	//修改图表参数
-	public ResultInfo saveimgcond(String curruserid,EBSDYNRPTIMG dynrptimg,EBSDYNRPTIMGCOLS dynrptimgcols) throws DataAccessException;
+	public ResultInfo saveimgcond(String curruserid,EbsDynrptImg dynrptimg,EbsDynrptImgcols dynrptimgcols) throws DataAccessException;
 
 	
 	//查询sql字段
@@ -106,7 +106,7 @@ public interface iReportManageDAO {
 	
 	//动态报表重新编译excel文件
 	public void compileExcel(String path,List<String> writecontents,String repid,String rptname,String repmarker,String rptversion,String rptremark,String writetyle,
-			String isoutTxt,String pixs,String emptsperpix,String fildemps,String xlstype,Ebsdynrptmsgpara dynrptSendMsgpara,EBSDYNRPTIMG dynrptIMG);
+			String isoutTxt,String pixs,String emptsperpix,String fildemps,String xlstype,EbsDynrptMsgpara dynrptSendMsgpara,EbsDynrptImg dynrptIMG);
 	
 	//保存查询条件到临时表
 	public ResultInfo saverptparatmp(String curruserid,String reqid,String qhlabelname,String qhiptctrlname,String qhiptctrltype,String qhiptctrldef,String qhiptctrllist,String qhiptisnull,String qhiptpardef) throws DataAccessException;
@@ -129,7 +129,7 @@ public interface iReportManageDAO {
 	public EbsDynrptPagepara getdynrptpagepara(String table,String reportid)throws DataAccessException;
 
 	//短信
-	public Ebsdynrptmsgpara getdynrptSendMsgpara(String table,String reportid)throws DataAccessException;
+	public EbsDynrptMsgpara getdynrptSendMsgpara(String table,String reportid)throws DataAccessException;
 	//查询动态报表批量导出参数
 	public List<EbsDynrptBatchpara> getdynrptbatchpara(String table,String reportid)throws DataAccessException;
 	
@@ -168,43 +168,43 @@ public interface iReportManageDAO {
 	
 	public List<Map<String, String>> querySendSmsListBySql(String sql);
 	public List<String> getDyncTSqlList(String table,String reportid);
-	public ResultInfo saverptmsgpara(String curruserid,String reportid,Ebsdynrptmsgpara dynrptSendMsgpara) throws DataAccessException;
+	public ResultInfo saverptmsgpara(String curruserid,String reportid,EbsDynrptMsgpara dynrptSendMsgpara) throws DataAccessException;
 	
-	public Ebsdynimpbpara getdynimpbpara(String reportid)throws DataAccessException;
+	public EbsDynimpBpara getdynimpbpara(String reportid)throws DataAccessException;
 	public List getdynimphpara(String reportid)throws DataAccessException;
 	
 	//增加导入xls文件主表
-	public boolean saveDynImpBpara(Ebsdynimpbpara bpara);
+	public boolean saveDynImpBpara(EbsDynimpBpara bpara);
 	
 	public boolean delDynImpBpara(String reportId);
 	
-	public Ebsdynimpbpara queryDynImpBpara(String reportId);
+	public EbsDynimpBpara queryDynImpBpara(String reportId);
 	
 	//增加导入xls文件的输入参数表
-	public boolean saveDynImpHpara(Ebsdynimphpara hpara);
+	public boolean saveDynImpHpara(EbsDynimpHpara hpara);
 	
 	public boolean delDynImpHpara(String reportId);
 	
 	//增加导入xls文件的列参数
-	public boolean saveDynImpCpara(Ebsdynimpcparam cparam);
+	public boolean saveDynImpCpara(EbsDynimpCparam cparam);
 	
 	public boolean delDynImpCpara(String reportId);
 	
-	public List<Ebsdynimpcparam> queryDynImpCpara(String reportId);
+	public List<EbsDynimpCparam> queryDynImpCpara(String reportId);
 	
 	//增加导入xls时查找关键字设置
-	public boolean saveDynImpFind(Ebsdynimpfind find);
+	public boolean saveDynImpFind(EbsDynimpFind find);
 	
 	public boolean delDynImpFind(String reportId);
 	
-	public Ebsdynimpfind queryDynImpFind(String reportId);
+	public EbsDynimpFind queryDynImpFind(String reportId);
 	
 	//增加导入xls内容的sql
-	public boolean saveDynImpExeSql(Ebsdynimpexesql sql);
+	public boolean saveDynImpExeSql(EbsDynimpExesql sql);
 	
 	public boolean delDynImpExeSql(String reportId);
 	
-	public List<Ebsdynimpexesql> qeuryDynImpExeSql(String reportId);
+	public List<EbsDynimpExesql> qeuryDynImpExeSql(String reportId);
 	
 	/**根据id修改url路径**/
 	public boolean updmenuurl(String curruserid,String menuid, String reportno) throws DataAccessException;
@@ -213,15 +213,13 @@ public interface iReportManageDAO {
 	public Map<String,Object> queryryDyncImgResult(String reportId,String reportJrxmlm,String tabflag,String inputName,String inputValue)throws DataAccessException;
 	
 	//获取图表相关参数
-	public EBSDYNRPTIMG getEbsdynrptImg(String table,String reportId)throws DataAccessException;
+	public EbsDynrptImg getEbsdynrptImg(String table,String reportId)throws DataAccessException;
 	
 	//获取图表相关参数
-	public List<EBSDYNRPTIMGCOLS> getEbsdynrptImgCols(String table,String reportId,String sheetindex)throws DataAccessException;
+	public List<EbsDynrptImgcols> getEbsdynrptImgCols(String table,String reportId,String sheetindex)throws DataAccessException;
 	
 	public String getEbsdynrptImgDefault(String reportId)throws DataAccessException;
 	
-	//查询首页的sql
-	public String QueryHomeSql(int id) throws DataAccessException;
 	//查询首页右上角，每天的数据
 	public Map<String, String> eveData()throws DataAccessException;
 	//查询首页右下角，最近几天的数据

@@ -1,14 +1,19 @@
 package com.wnt.ireport.po;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Ebsdynimpbpara implements Serializable {
+public class EbsDynimpBpara implements Serializable {
     
-    private String reportid;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	private String reportid;
     
     private String reportname;
     
@@ -24,7 +29,7 @@ public class Ebsdynimpbpara implements Serializable {
     
     private String resultsql;
 
-    public Ebsdynimpbpara(String reportid,String reportname,String filename,String rptmaker,String rptmakedt,String rptversion,String rptremark,String resultsql) {
+    public EbsDynimpBpara(String reportid,String reportname,String filename,String rptmaker,String rptmakedt,String rptversion,String rptremark,String resultsql) {
         this.reportid = reportid;
         this.reportname = reportname;
         this.filename = filename;
@@ -35,7 +40,7 @@ public class Ebsdynimpbpara implements Serializable {
         this.resultsql = resultsql;
     }
 
-    public Ebsdynimpbpara() {}
+    public EbsDynimpBpara() {}
     public String getReportid() {return this.reportid;}
     public void setReportid(String reportid) {this.reportid = reportid;}
     public String getReportname() {return this.reportname;}
@@ -73,8 +78,8 @@ public class Ebsdynimpbpara implements Serializable {
     }
 
     public boolean equals(Object other) {
-        if ( !(other instanceof Ebsdynimpbpara) ) return false;
-        Ebsdynimpbpara castOther = (Ebsdynimpbpara) other;
+        if ( !(other instanceof EbsDynimpBpara) ) return false;
+        EbsDynimpBpara castOther = (EbsDynimpBpara) other;
         return new EqualsBuilder()
             .append(this.getReportid(), castOther.getReportid())
             .append(this.getReportname(), castOther.getReportname())

@@ -1,13 +1,17 @@
 package com.wnt.ireport.po;
 
 import java.io.Serializable;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
-
-public class EBSDYNRPTIMGCOLS implements Serializable {
+public class EbsDynrptImgcols implements Serializable {
     
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** identifier field */
     private String reportid;
 
@@ -45,7 +49,7 @@ public class EBSDYNRPTIMGCOLS implements Serializable {
     private String sheetindex;
 
     /** full constructor */
-    public EBSDYNRPTIMGCOLS(String reportid, String orderid, String fieldid, String paramname, String reportjxmlm, String tname, String fieldname, String imgcolor, String borderwd, String labelname, String fieldidc, String sheetindex) {
+    public EbsDynrptImgcols(String reportid, String orderid, String fieldid, String paramname, String reportjxmlm, String tname, String fieldname, String imgcolor, String borderwd, String labelname, String fieldidc, String sheetindex) {
         this.reportid = reportid;
         this.orderid = orderid;
         this.fieldid = fieldid;
@@ -60,7 +64,7 @@ public class EBSDYNRPTIMGCOLS implements Serializable {
         this.sheetindex = sheetindex;
     }
     
-    public EBSDYNRPTIMGCOLS(String reportid, String orderid,String paramname, String imgcolor, String borderwd, String labelname ) {
+    public EbsDynrptImgcols(String reportid, String orderid,String paramname, String imgcolor, String borderwd, String labelname ) {
         this.reportid = reportid;
         this.orderid = orderid;
         this.paramname = paramname;
@@ -70,7 +74,7 @@ public class EBSDYNRPTIMGCOLS implements Serializable {
     }
 
     /** default constructor */
-    public EBSDYNRPTIMGCOLS() {
+    public EbsDynrptImgcols() {
     }
 
     public String getReportid() {
@@ -187,8 +191,8 @@ public class EBSDYNRPTIMGCOLS implements Serializable {
     }
 
     public boolean equals(Object other) {
-        if ( !(other instanceof EBSDYNRPTIMGCOLS) ) return false;
-        EBSDYNRPTIMGCOLS castOther = (EBSDYNRPTIMGCOLS) other;
+        if ( !(other instanceof EbsDynrptImgcols) ) return false;
+        EbsDynrptImgcols castOther = (EbsDynrptImgcols) other;
         return new EqualsBuilder()
             .append(this.getReportid(), castOther.getReportid())
             .append(this.getOrderid(), castOther.getOrderid())

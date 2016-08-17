@@ -9,18 +9,18 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.wnt.ireport.util.CopyFileUtil;
-import com.esimple.m_sec.PubClass.ResultInfo;
-import com.esimple.m_sec.iReport.dao.iReportManageDAO;
+import com.wnt.ireport.dao.iReportManageDAO;
+import com.wnt.ireport.model.ResultInfo;
 import com.wnt.ireport.model.ReadRptExcel;
-import com.esimple.m_sec.iReport.po.EBSDYNRPTIMG;
-import com.esimple.m_sec.iReport.po.EbsDynrptBatchpara;
-import com.esimple.m_sec.iReport.po.EbsDynrptBpara;
-import com.esimple.m_sec.iReport.po.EbsDynrptHpara;
-import com.esimple.m_sec.iReport.po.EbsDynrptJxml;
-import com.esimple.m_sec.iReport.po.EbsDynrptSqlCol;
-import com.esimple.m_sec.iReport.po.Ebsdynrptmsgpara;
-import com.wnt.util.PubComm;
+import com.wnt.ireport.po.EbsDynrptImg;
+import com.wnt.ireport.po.EbsDynrptBatchpara;
+import com.wnt.ireport.po.EbsDynrptBpara;
+import com.wnt.ireport.po.EbsDynrptHpara;
+import com.wnt.ireport.po.EbsDynrptJxml;
+import com.wnt.ireport.po.EbsDynrptSqlCol;
+import com.wnt.ireport.po.EbsDynrptMsgpara;
+import com.wnt.ireport.util.CommUtil;
+import com.wnt.ireport.util.CopyFileUtil;
 
 
 
@@ -58,7 +58,7 @@ public class iReportManageAction {
 		try {
 			compflag = request.getParameter("compflag").toString();
 		} catch (Exception e) {
-			pubcomm.writeLogfile("dynireport(01)"+e.getMessage());
+			CommUtil.writeLogfile("dynireport(01)"+e.getMessage());
 			compflag = "";
 		}
 
@@ -68,7 +68,7 @@ public class iReportManageAction {
 		try {
 			rtnval = rptxls.readcfgfile(filename);
 		} catch (Exception e) {
-			pubcomm.writeLogfile("dynireport(02)"+e.getMessage());
+			CommUtil.writeLogfile("dynireport(02)"+e.getMessage());
 			e.printStackTrace();
 			rtnval = e.getMessage();
 		}
@@ -77,7 +77,7 @@ public class iReportManageAction {
 			String returnMsg = "解析报表设置错误：" + rtnval;
 			returnMsg = returnMsg.replace("\"", "");
 			request.setAttribute("rtnmsg", returnMsg);
-			pubcomm.writeLogfile("dynireport(03)"+returnMsg);
+			CommUtil.writeLogfile("dynireport(03)"+returnMsg);
 			return "dynireportrtnfail";	
 		}
 		iReportManageDAO rptDaO = (iReportManageDAO) dao;
@@ -112,9 +112,9 @@ public class iReportManageAction {
 		
 		//加入报表导入日志
 		if("1".equalsIgnoreCase(imptype)){
-			pubcomm.SetLog("动态报表导入(页面修改)", curruserid, "addRpt", "页面导入动态报表:"+reportid+"_"+fname, pubcomm.getIpAddr(request));
+			CommUtil.SetLog("动态报表导入(页面修改)", curruserid, "addRpt", "页面导入动态报表:"+reportid+"_"+fname, CommUtil.getIpAddr(request));
 		}else{
-			pubcomm.SetLog("动态报表导入(正常导入)", curruserid, "addRpt", "正常导入动态报表:"+reportid+"_"+fname, pubcomm.getIpAddr(request));
+			CommUtil.SetLog("动态报表导入(正常导入)", curruserid, "addRpt", "正常导入动态报表:"+reportid+"_"+fname, CommUtil.getIpAddr(request));
 		}
 		
 		List<String[][]> dynrpt_sqlcol = new ArrayList<String[][]>();
@@ -160,7 +160,7 @@ public class iReportManageAction {
 					rtnval2=rptxls.readmdlfile2(filename);
 				}
 			} catch (Exception e) {
-				pubcomm.writeLogfile("dynireport(04)"+":"+filename+":"+rtnval+","+e.getMessage());
+				CommUtil.writeLogfile("dynireport(04)"+":"+filename+":"+rtnval+","+e.getMessage());
 				rtnval = e.getMessage();
 				try{
 					if("VER 1.0".equalsIgnoreCase(dynrptver))
@@ -172,15 +172,15 @@ public class iReportManageAction {
 		}else {
 			rtnval = rtnval.replace("\"", "");
 			request.setAttribute("rtnmsg", rtnval);
-			pubcomm.writeLogfile("dynireport(05)"+rtnval);
+			CommUtil.writeLogfile("dynireport(05)"+rtnval);
 			return "dynireportrtnfail";
 		}
 		if (rtnval2.equals("")&&!"VER 1.0".equalsIgnoreCase(dynrptver)) rtnval=rtnval2;
 		
 		if (rtnval.equals("")) {
 			EbsDynrptBpara dynrptbpara = new EbsDynrptBpara();
-			Ebsdynrptmsgpara dyncSendMsg = new Ebsdynrptmsgpara();
-			EBSDYNRPTIMG ebsdynimg = new EBSDYNRPTIMG();
+			EbsDynrptMsgpara dyncSendMsg = new EbsDynrptMsgpara();
+			EbsDynrptImg ebsdynimg = new EbsDynrptImg();
 			try {
 				dynrptbpara.setReportid(rptxls.getReportid());
 				dynrptbpara.setReportname(rptxls.getReportname());
@@ -245,7 +245,7 @@ public class iReportManageAction {
 				dyncSendMsg.setUpwd(rptxls.getUpwd());
 				dyncSendMsg.setContent(rptxls.getContent());
 				
-				ResultInfo reinfo = rptDaO.saverptpara(curruserid, pubcomm.getIpAddr(request), dynrptbpara, dynrpthpara,
+				ResultInfo reinfo = rptDaO.saverptpara(curruserid, CommUtil.getIpAddr(request), dynrptbpara, dynrpthpara,
 						subprt,sheetname,jxmls,mjxmls,ismjxmls,dynrptbatchpara,dynrptprintpara,pagesqlmap,dyncSendMsg,ebsdynimg,dyncimgcols,shttnamelist,rptxls.getDynbodys());
 				String rtnmsg = "";
 				if ((reinfo == null)
@@ -254,7 +254,6 @@ public class iReportManageAction {
 					request.setAttribute("rtnmsg", rtnmsg);
 					return "dynireportrtnfail";
 				} else {
-					form.setValue("returnMsg", "成功");
 					List dynrptHpara = rptDaO.getdynrpthpara("ebs_dynrpt_hpara_tmp",reportid);
 					List dynrptBatchparalist = rptDaO.getdynrptbatchpara("ebs_dynrpt_batchpara_tmp",reportid);
 					EbsDynrptBpara dynrptBpara = rptDaO.getdynrptbpara("ebs_dynrpt_bpara_tmp",reportid);
@@ -292,7 +291,7 @@ public class iReportManageAction {
 					request.setAttribute("isouttxt", dynrptBpara.getIsouttxt());
 					request.setAttribute("dynrptBpara", dynrptBpara);
 					
-					Ebsdynrptmsgpara dynrptSendMsgpara = rptDaO.getdynrptSendMsgpara("ebs_dynrpt_msgpara_tmp",reportid);
+					EbsDynrptMsgpara dynrptSendMsgpara = rptDaO.getdynrptSendMsgpara("ebs_dynrpt_msgpara_tmp",reportid);
 					request.setAttribute("issendmsg", dynrptSendMsgpara.getIssendmsg());
 					
 					//若是重新编译后则生成新的jrxml、jasper文件
@@ -376,13 +375,13 @@ public class iReportManageAction {
 				String returnMsg = "未知错误!" + e.getMessage();
 				returnMsg = returnMsg.replace("\"", "");
 				request.setAttribute("rtnmsg", returnMsg);
-				pubcomm.writeLogfile("dynireport(06)"+returnMsg);
+				CommUtil.writeLogfile("dynireport(06)"+returnMsg);
 				return "dynireportrtnfail";
 			}
 		} else {
 			rtnval = rtnval.replace("\"", "");
 			request.setAttribute("rtnmsg", rtnval);
-			pubcomm.writeLogfile("dynireport(07)"+rtnval);
+			CommUtil.writeLogfile("dynireport(07)"+rtnval);
 			return "dynireportrtnfail";
 		}
 	}

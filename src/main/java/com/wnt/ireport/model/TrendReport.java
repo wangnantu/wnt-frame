@@ -23,7 +23,7 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import com.wnt.util.PubComm;
+import com.wnt.ireport.util.CommUtil;
 
 //动态报表类
 public class TrendReport {
@@ -35,13 +35,13 @@ public class TrendReport {
 	private String modelxmlname = "xmlmodel";
 	private String nsstr = "http://jasperreports.sourceforge.net/jasperreports";
 	private Namespace ns = null;
-	private String jrxmldir = PubComm.getProjectPath()
+	private String jrxmldir = CommUtil.getProjectPath()
 			+ "temp/";
 	private int bandWidthValue = 8;
 	private String pageHeight = "470";
-	private String compjrxmldir = PubComm.getProjectPath()
+	private String compjrxmldir = CommUtil.getProjectPath()
 	        + "temp/";
-	private String subreportdir = PubComm.getProjectPath()+"jsp/sysadmin/ireport/reportjasper/";
+	private String subreportdir = CommUtil.getProjectPath()+"jsp/sysadmin/ireport/reportjasper/";
 	private String sysdate ="$P{SYSDATE}";
 	private String CNCELLTYPEBIGDECIMAL="java.math.BigDecimal";
 	private String COUNT="COUNT";
@@ -58,7 +58,7 @@ public class TrendReport {
 
 	// 生成jrxml文件
 	public void CreateJrxml(String newxmlname) {
-		String modelxmlpath = PubComm.getProjectPath()
+		String modelxmlpath = CommUtil.getProjectPath()
 				+ "jsp/reports/models/" + modelxmlname
 				+ ".jrxml";
 		String newxmlpath = jrxmldir + newxmlname + ".jrxml";
@@ -226,7 +226,7 @@ public class TrendReport {
 			}else if("$P!{RANKORDER}".equals(cellstyle.getSigndata())){
 				defaultValueExpressionelem.setText('"'+"desc"+'"');
 			}else {
-				defaultValueExpressionelem.setText(PubComm.getDate2());
+				defaultValueExpressionelem.setText(CommUtil.getDate2());
 			}
 			paramelem.addContent(defaultValueExpressionelem);
 		}

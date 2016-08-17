@@ -1,26 +1,30 @@
 package com.wnt.ireport.po;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Ebsdynimpcparam implements Serializable {
+public class EbsDynimpCparam implements Serializable {
     
-    private String reportid;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String reportid;
     
     private String cname;
     
     private String param;
 
-    public Ebsdynimpcparam(String reportid,String cname,String param) {
+    public EbsDynimpCparam(String reportid,String cname,String param) {
         this.reportid = reportid;
         this.cname = cname;
         this.param = param;
     }
 
-    public Ebsdynimpcparam() {}
+    public EbsDynimpCparam() {}
     public String getReportid() {return this.reportid;}
     public void setReportid(String reportid) {this.reportid = reportid;}
     public String getCname() {return this.cname;}
@@ -37,8 +41,8 @@ public class Ebsdynimpcparam implements Serializable {
     }
 
     public boolean equals(Object other) {
-        if ( !(other instanceof Ebsdynimpcparam) ) return false;
-        Ebsdynimpcparam castOther = (Ebsdynimpcparam) other;
+        if ( !(other instanceof EbsDynimpCparam) ) return false;
+        EbsDynimpCparam castOther = (EbsDynimpCparam) other;
         return new EqualsBuilder()
             .append(this.getReportid(), castOther.getReportid())
             .append(this.getCname(), castOther.getCname())

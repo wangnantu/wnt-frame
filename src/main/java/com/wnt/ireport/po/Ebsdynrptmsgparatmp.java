@@ -1,14 +1,18 @@
 package com.wnt.ireport.po;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Ebsdynrptmsgparatmp implements Serializable {
+public class EbsDynrptMsgparatmp implements Serializable {
     
-    private String reportid;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String reportid;
     
     private String remark;
     
@@ -22,7 +26,7 @@ public class Ebsdynrptmsgparatmp implements Serializable {
     
     private String content;
 
-    public Ebsdynrptmsgparatmp(String reportid,String remark,String issendmsg,String useid,String upwd,String appid,String content) {
+    public EbsDynrptMsgparatmp(String reportid,String remark,String issendmsg,String useid,String upwd,String appid,String content) {
         this.reportid = reportid;
         this.remark = remark;
         this.issendmsg = issendmsg;
@@ -32,7 +36,7 @@ public class Ebsdynrptmsgparatmp implements Serializable {
         this.content = content;
     }
 
-    public Ebsdynrptmsgparatmp() {}
+    public EbsDynrptMsgparatmp() {}
     public String getReportid() {return this.reportid;}
     public void setReportid(String reportid) {this.reportid = reportid;}
     public String getRemark() {return this.remark;}
@@ -61,8 +65,8 @@ public class Ebsdynrptmsgparatmp implements Serializable {
     }
 
     public boolean equals(Object other) {
-        if ( !(other instanceof Ebsdynrptmsgparatmp) ) return false;
-        Ebsdynrptmsgparatmp castOther = (Ebsdynrptmsgparatmp) other;
+        if ( !(other instanceof EbsDynrptMsgparatmp) ) return false;
+        EbsDynrptMsgparatmp castOther = (EbsDynrptMsgparatmp) other;
         return new EqualsBuilder()
             .append(this.getReportid(), castOther.getReportid())
             .append(this.getRemark(), castOther.getRemark())

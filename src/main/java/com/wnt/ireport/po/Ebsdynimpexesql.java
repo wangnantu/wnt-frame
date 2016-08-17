@@ -1,14 +1,18 @@
 package com.wnt.ireport.po;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Ebsdynimpexesql implements Serializable {
+public class EbsDynimpExesql implements Serializable {
     
-    private String reportid;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String reportid;
     
     private String impsql;
     
@@ -16,14 +20,14 @@ public class Ebsdynimpexesql implements Serializable {
     
     private int impsuborder;
 
-    public Ebsdynimpexesql(String reportid,String impsql,int imporder,int impsuborder) {
+    public EbsDynimpExesql(String reportid,String impsql,int imporder,int impsuborder) {
         this.reportid = reportid;
         this.impsql = impsql;
         this.imporder = imporder;
         this.impsuborder = impsuborder;
     }
 
-    public Ebsdynimpexesql() {}
+    public EbsDynimpExesql() {}
     public String getReportid() {return this.reportid;}
     public void setReportid(String reportid) {this.reportid = reportid;}
     public String getImpsql() {return this.impsql;}
@@ -43,8 +47,8 @@ public class Ebsdynimpexesql implements Serializable {
     }
 
     public boolean equals(Object other) {
-        if ( !(other instanceof Ebsdynimpexesql) ) return false;
-        Ebsdynimpexesql castOther = (Ebsdynimpexesql) other;
+        if ( !(other instanceof EbsDynimpExesql) ) return false;
+        EbsDynimpExesql castOther = (EbsDynimpExesql) other;
         return new EqualsBuilder()
             .append(this.getReportid(), castOther.getReportid())
             .append(this.getImpsql(), castOther.getImpsql())

@@ -1,14 +1,18 @@
 package com.wnt.ireport.po;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Ebsdynimphpara implements Serializable {
+public class EbsDynimpHpara implements Serializable {
     
-    private String reportid;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String reportid;
     
     private String labelname;
     
@@ -32,7 +36,7 @@ public class Ebsdynimphpara implements Serializable {
     
     private String iptreserve3;
 
-    public Ebsdynimphpara(String reportid,String labelname,String iptctrlname,String iptctrltype,String iptctrldef,String iptctrllist,String iptisnull,int orderid,String iptpardef,String iptreserve1,String iptreserve2,String iptreserve3) {
+    public EbsDynimpHpara(String reportid,String labelname,String iptctrlname,String iptctrltype,String iptctrldef,String iptctrllist,String iptisnull,int orderid,String iptpardef,String iptreserve1,String iptreserve2,String iptreserve3) {
         this.reportid = reportid;
         this.labelname = labelname;
         this.iptctrlname = iptctrlname;
@@ -47,7 +51,7 @@ public class Ebsdynimphpara implements Serializable {
         this.iptreserve3 = iptreserve3;
     }
 
-    public Ebsdynimphpara() {}
+    public EbsDynimpHpara() {}
     public String getReportid() {return this.reportid;}
     public void setReportid(String reportid) {this.reportid = reportid;}
     public String getLabelname() {return this.labelname;}
@@ -91,8 +95,8 @@ public class Ebsdynimphpara implements Serializable {
     }
 
     public boolean equals(Object other) {
-        if ( !(other instanceof Ebsdynimphpara) ) return false;
-        Ebsdynimphpara castOther = (Ebsdynimphpara) other;
+        if ( !(other instanceof EbsDynimpHpara) ) return false;
+        EbsDynimpHpara castOther = (EbsDynimpHpara) other;
         return new EqualsBuilder()
             .append(this.getReportid(), castOther.getReportid())
             .append(this.getLabelname(), castOther.getLabelname())

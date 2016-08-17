@@ -1,4 +1,4 @@
-package com.wnt.util;
+package com.wnt.ireport.model;
 
 public class ResultInfo {
 	private static ResultInfo ri;

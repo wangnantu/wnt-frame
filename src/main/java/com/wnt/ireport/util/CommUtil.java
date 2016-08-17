@@ -1,4 +1,4 @@
-package com.wnt.util;
+package com.wnt.ireport.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -10,7 +10,7 @@ import java.util.regex.PatternSyntaxException;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class PubComm {
+public class CommUtil {
 
 	 public static Map<String, Object> getResultMap(HttpServletRequest request) {
 		 Map<String, String[]> map = request.getParameterMap();

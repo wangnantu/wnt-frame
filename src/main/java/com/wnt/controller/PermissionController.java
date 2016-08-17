@@ -17,7 +17,7 @@ import com.wnt.domain.Permission;
 import com.wnt.domain.Menu;
 import com.wnt.service.IMenuService;
 import com.wnt.service.IPermissionService;
-import com.wnt.util.PubComm;
+import com.wnt.util.PubUtil;
 
 @Controller  
 @RequestMapping("/permission")  
@@ -33,7 +33,7 @@ public class PermissionController {
 	@ResponseBody 
 	public String getUserActionsByUseridAndMenuid(HttpServletRequest request, HttpServletResponse response){
 		
-    	Map<String, Object> paramMap = PubComm.getResultMap(request);
+    	Map<String, Object> paramMap = PubUtil.getResultMap(request);
     	String userid = (String)paramMap.get("userid");
     	int menuid = Integer.parseInt((String)paramMap.get("menuid"));
     	List<Permission> actionList = permissionService.getUserActionsByUseridAndMenuid(userid, menuid);
@@ -56,7 +56,7 @@ public class PermissionController {
 	@ResponseBody 
 	public String getMenusByUserid(HttpServletRequest request, HttpServletResponse response){
 		
-		Map<String, Object> paramMap = PubComm.getResultMap(request);
+		Map<String, Object> paramMap = PubUtil.getResultMap(request);
     	String userid = (String)paramMap.get("userid");
     	List<Integer> menuList = menuService.getMenusByUserid(userid);
     	//List<Menu> menus = new ArrayList<Menu>();

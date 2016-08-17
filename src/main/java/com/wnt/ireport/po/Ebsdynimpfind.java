@@ -1,14 +1,18 @@
 package com.wnt.ireport.po;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Ebsdynimpfind implements Serializable {
+public class EbsDynimpFind implements Serializable {
     
-    private String reportid;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String reportid;
     
     private String sheetname;
     
@@ -56,7 +60,7 @@ public class Ebsdynimpfind implements Serializable {
     
     private String dtlend;
 
-    public Ebsdynimpfind(String reportid,String sheetname,String lbeginscope,String lendscope,String lscopecontent,int loffset,int lnth,String tbeginscope,String tendscope,String tscopecontent,int toffset,int tnth,String rbeginscope,String rendscope,String rscopecontent,int roffset,int rnth,String bbeginscope,String bendscope,String bscopecontent,int boffset,int bnth,int dtlbegin,String dtlend) {
+    public EbsDynimpFind(String reportid,String sheetname,String lbeginscope,String lendscope,String lscopecontent,int loffset,int lnth,String tbeginscope,String tendscope,String tscopecontent,int toffset,int tnth,String rbeginscope,String rendscope,String rscopecontent,int roffset,int rnth,String bbeginscope,String bendscope,String bscopecontent,int boffset,int bnth,int dtlbegin,String dtlend) {
         this.reportid = reportid;
         this.sheetname = sheetname;
         this.lbeginscope = lbeginscope;
@@ -83,7 +87,7 @@ public class Ebsdynimpfind implements Serializable {
         this.dtlend = dtlend;
     }
 
-    public Ebsdynimpfind() {}
+    public EbsDynimpFind() {}
     public String getReportid() {return this.reportid;}
     public void setReportid(String reportid) {this.reportid = reportid;}
     public String getSheetname() {return this.sheetname;}
@@ -163,8 +167,8 @@ public class Ebsdynimpfind implements Serializable {
     }
 
     public boolean equals(Object other) {
-        if ( !(other instanceof Ebsdynimpfind) ) return false;
-        Ebsdynimpfind castOther = (Ebsdynimpfind) other;
+        if ( !(other instanceof EbsDynimpFind) ) return false;
+        EbsDynimpFind castOther = (EbsDynimpFind) other;
         return new EqualsBuilder()
             .append(this.getReportid(), castOther.getReportid())
             .append(this.getSheetname(), castOther.getSheetname())

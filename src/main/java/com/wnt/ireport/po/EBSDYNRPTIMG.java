@@ -1,14 +1,18 @@
 package com.wnt.ireport.po;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class EBSDYNRPTIMG implements Serializable {
+public class EbsDynrptImg implements Serializable {
     
-    private String reportid;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String reportid;
     
     private String isoutmg;
     
@@ -38,7 +42,7 @@ public class EBSDYNRPTIMG implements Serializable {
     
     private String imgtitle;
     
-    public EBSDYNRPTIMG(String reportid,String isoutmg,String imgtype,String beginrow,String endrow,String xtitle,String ytitle,String bgcolor,String fontsize,String istip,String istext,String xcount,String isshowimgtitle,String isshowdatagrid,String imgtitle) {
+    public EbsDynrptImg(String reportid,String isoutmg,String imgtype,String beginrow,String endrow,String xtitle,String ytitle,String bgcolor,String fontsize,String istip,String istext,String xcount,String isshowimgtitle,String isshowdatagrid,String imgtitle) {
         this.reportid = reportid;
         this.isoutmg = isoutmg;
         this.imgtype = imgtype;
@@ -80,7 +84,7 @@ public class EBSDYNRPTIMG implements Serializable {
 		this.isshowdatagrid = isshowdatagrid;
 	}
 
-	public EBSDYNRPTIMG() {}
+	public EbsDynrptImg() {}
     public String getReportid() {return this.reportid;}
     public void setReportid(String reportid) {this.reportid = reportid;}
     public String getIsoutmg() {return this.isoutmg;}
@@ -125,8 +129,8 @@ public class EBSDYNRPTIMG implements Serializable {
     }
 
     public boolean equals(Object other) {
-        if ( !(other instanceof EBSDYNRPTIMG) ) return false;
-        EBSDYNRPTIMG castOther = (EBSDYNRPTIMG) other;
+        if ( !(other instanceof EbsDynrptImg) ) return false;
+        EbsDynrptImg castOther = (EbsDynrptImg) other;
         return new EqualsBuilder()
             .append(this.getReportid(), castOther.getReportid())
             .append(this.getIsoutmg(), castOther.getIsoutmg())
