@@ -37,7 +37,7 @@ public interface iReportManageDAO {
 	public String expRpt(HttpServletRequest request,HttpServletResponse response, Map parameter, String reportFile,String title,String type) throws Exception;	
 
 	public String expRptManySheet(HttpServletRequest request,HttpServletResponse response, Map [] parammaps, String [] reportFile,String [] title,String type) throws Exception;
-	public Connection getconn(HttpServletRequest request);
+	public Connection getconn();
 	
 	//取得清算月份
 	public String gettradingday()throws DataAccessException;
@@ -210,18 +210,13 @@ public interface iReportManageDAO {
 	public boolean updmenuurl(String curruserid,String menuid, String reportno) throws DataAccessException;
 	
 	//取得图表数据列表
-	public Map<String,Object> queryryDyncImgResult(String reportId,String reportJrxmlm,String tabflag,String inputName,String inputValue)throws DataAccessException;
+	public Map<String,Object> queryryDyncImgResult(String reportId,String reportJrxmlm,String tabflag,String inputName,String inputValue) throws DataAccessException;
 	
 	//获取图表相关参数
-	public EbsDynrptImg getEbsdynrptImg(String table,String reportId)throws DataAccessException;
+	public EbsDynrptImg getEbsdynrptImg(String table,String reportId) throws DataAccessException;
 	
 	//获取图表相关参数
-	public List<EbsDynrptImgcols> getEbsdynrptImgCols(String table,String reportId,String sheetindex)throws DataAccessException;
+	public List<EbsDynrptImgcols> getEbsdynrptImgCols(String table,String reportId,String sheetindex) throws DataAccessException;
 	
-	public String getEbsdynrptImgDefault(String reportId)throws DataAccessException;
-	
-	//查询首页右上角，每天的数据
-	public Map<String, String> eveData()throws DataAccessException;
-	//查询首页右下角，最近几天的数据
-	public List<Map<String, String>> recData()throws DataAccessException;
+	public String getEbsdynrptImgDefault(String reportId) throws DataAccessException;
 }

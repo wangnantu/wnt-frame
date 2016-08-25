@@ -1,4 +1,4 @@
-package com.wnt.ireport.action;
+package com.wnt.ireport.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,7 +9,15 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.wnt.controller.UserController;
 import com.wnt.ireport.dao.iReportManageDAO;
+import com.wnt.ireport.dao.hibernate.iReportManageDAOImpl;
 import com.wnt.ireport.model.ResultInfo;
 import com.wnt.ireport.model.ReadRptExcel;
 import com.wnt.ireport.po.EbsDynrptImg;
@@ -25,9 +33,17 @@ import com.wnt.ireport.util.CopyFileUtil;
 
 
 
-public class iReportManageAction {
+@Controller  
+@RequestMapping("/ireport")  
+public class iReportManageController {
+	private static Logger logger = Logger.getLogger(UserController.class);
 	
 	
+	String rptbatchpartype1 = "日期区间";
+	//String rptbatchpartype2 = "营业部集合";
+	
+	@RequestMapping(value="/dynireport",method = RequestMethod.GET)
+	@ResponseBody  
 	private String dynireport(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		String curruserid = request.getParameter("curruserid");
@@ -80,7 +96,7 @@ public class iReportManageAction {
 			CommUtil.writeLogfile("dynireport(03)"+returnMsg);
 			return "dynireportrtnfail";	
 		}
-		iReportManageDAO rptDaO = (iReportManageDAO) dao;
+		iReportManageDAO rptDaO = new iReportManageDAOImpl();
 		
 		//查询条件List
 		List<String[][]> dynrpthpara = rptxls.getDynrpt_hpara();

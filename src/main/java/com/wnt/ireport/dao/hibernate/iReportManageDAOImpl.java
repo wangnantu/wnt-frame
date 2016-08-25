@@ -15,13 +15,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -60,15 +60,16 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.springframework.dao.DataAccessException;
+import org.springframework.orm.hibernate5.SessionFactoryUtils;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 import com.wnt.ireport.dao.iReportManageDAO;
+import com.wnt.ireport.model.JasperSubViewer;
 import com.wnt.ireport.model.ResultInfo;
 import com.wnt.ireport.model.Combmaplist;
 import com.wnt.ireport.po.EbsDynrptImg;
@@ -86,14 +87,13 @@ import com.wnt.ireport.po.EbsDynimpExesql;
 import com.wnt.ireport.po.EbsDynimpFind;
 import com.wnt.ireport.po.EbsDynimpHpara;
 import com.wnt.ireport.po.EbsDynrptMsgpara;
-import com.esimple.m_sec.util.SingleGetCon;
-import com.esimple.m_sec.util.comm.pubcomm;
+import com.wnt.ireport.util.CommUtil;
+import com.wnt.util.SingleGetCon;
 
 /**
  * @author luzh
  * 
  * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		iReportManageDAO {
@@ -111,12 +111,10 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			HttpServletResponse response, Map parameter, String reportFile,
 			String title) throws Exception {
 		Connection conn = null;
-		Session session = null;
 
 		// 获取Connection连接
 		try {
-			session = getSession();
-			conn = session.connection();
+			conn = getconn();
 
 			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File(reportFile));
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameter, conn);
@@ -142,13 +140,14 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		}
 	}
 
-	public Connection getconn(HttpServletRequest request) {
+	public Connection getconn() {
 		Connection conn = null;
-		Session session = null;
-		session = getSession();
 		try {
-			conn = session.connection();
+			conn = SessionFactoryUtils.getDataSource(getSessionFactory()).getConnection();;
 		} catch (HibernateException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -161,11 +160,9 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		CallableStatement cstmt = null;
 		ResultInfo reinfo = null;
 
-		Session session = null;
 		String tradingday = "";
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection = getconn();
 			cstmt = connection.prepareCall("{ ?= call pkg_tech_pub.uf_get_tradingday}");
 			cstmt.registerOutParameter(1, Types.CHAR);
 			cstmt.execute();
@@ -194,16 +191,14 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			HttpServletResponse response, Map[] arrmap, String[] reportFile,
 			String[] title, String type) throws Exception {
 		Connection conn = null;
-		Session session = null;
 		String rptfile = "";
 		String serverName = request.getServerName(); // 获得服务器的名字
 		String realPath = request.getRealPath(serverName); // 取得互联网程序的绝对地址
 		realPath = realPath.substring(0, realPath.lastIndexOf("\\")) + "\\temp\\";
-		String sysid = pubcomm.getsysguid32();
+		String sysid = CommUtil.getsysguid32();
 		// 获取Connection连接
 		try {
-			session = getSession();
-			conn = session.connection();
+			conn = getconn();
 
 			List<JasperReport> jasperReports = new ArrayList<JasperReport>();
 			for (int i = 0; i < reportFile.length; i++) {
@@ -270,7 +265,7 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 					conn.close();
 				}
 			} catch (Exception e) {
-				pubcomm.writeLogfile("expRptManySheet(01)"+e.getMessage());
+				CommUtil.writeLogfile("expRptManySheet(01)"+e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -281,17 +276,15 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			HttpServletResponse response, Map parameter, String reportFile,
 			String title, String type) throws Exception {
 		Connection conn = null;
-		Session session = null;
 		String rptfile = "";
 		String serverName = request.getServerName(); // 获得服务器的名字
 		String realPath = request.getRealPath(serverName); // 取得互联网程序的绝对地址
 		realPath = realPath.substring(0, realPath.lastIndexOf(File.separator))
 				+ File.separator+"temp"+File.separator;
-		String sysid = pubcomm.getsysguid32();
+		String sysid = CommUtil.getsysguid32();
 		// 获取Connection连接
 		try {
-			session = getSession();
-			conn = session.connection();
+			conn = getconn();
 			JasperReport jasperReport = (JasperReport) JRLoader
 					.loadObject(new File(reportFile));
 //			if (type.equalsIgnoreCase("pdf")) {
@@ -369,7 +362,7 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 					conn.close();
 				}
 			} catch (Exception e) {
-				pubcomm.writeLogfile("expRpt(01)"+e.getMessage());
+				CommUtil.writeLogfile("expRpt(01)"+e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -396,17 +389,15 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			HttpServletResponse response, Map parameter, String reportFile,
 			String title, String path) throws Exception {
 		Connection conn = null;
-		Session session = null;
 		String rptfile = "";
 		String serverName = request.getServerName(); // 获得服务器的名字
 		String realPath = request.getRealPath(serverName); // 取得互联网程序的绝对地址
 		realPath = realPath.substring(0, realPath.lastIndexOf("\\"))
 				+ "\\temp\\";
-		String sysid = pubcomm.getsysguid32();
+		String sysid = CommUtil.getsysguid32();
 		// 获取Connection连接
 		try {
-			session = getSession();
-			conn = session.connection();
+			conn = getconn();
 			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File(reportFile));
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameter, conn);
 			JRXlsxExporter xlsExporter = new JRXlsxExporter();//excel2007
@@ -435,7 +426,7 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 					conn.close();
 				}
 			} catch (Exception e) {
-				pubcomm.writeLogfile("expRptToXls(01)"+e.getMessage());
+				CommUtil.writeLogfile("expRptToXls(01)"+e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -466,10 +457,10 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			Reader xmlStreamReader = new InputStreamReader(new FileInputStream(xmlfile), "utf-8");
 			document = builder.build(xmlStreamReader);
 		} catch (JDOMException e) {
-			pubcomm.writeLogfile("setPrintscope(01)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintscope(01)"+e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			pubcomm.writeLogfile("setPrintscope(02)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintscope(02)"+e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -561,16 +552,16 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			wbook.close();
 			rwb.close();
 		} catch (FileNotFoundException e) {
-			pubcomm.writeLogfile("expRptToXls(03)"+e.getMessage());
+			CommUtil.writeLogfile("expRptToXls(03)"+e.getMessage());
 			e.printStackTrace();
 		} catch (BiffException e) {
-			pubcomm.writeLogfile("setPrintscope(04)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintscope(04)"+e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			pubcomm.writeLogfile("setPrintscope(05)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintscope(05)"+e.getMessage());
 			e.printStackTrace();
 		} catch (WriteException e) {
-			pubcomm.writeLogfile("setPrintscope(06)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintscope(06)"+e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -597,10 +588,10 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			Reader xmlStreamReader = new InputStreamReader(new FileInputStream(xmlfile), "utf-8");
 			document = builder.build(xmlStreamReader);
 		} catch (JDOMException e) {
-			pubcomm.writeLogfile("setPrintscope(01)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintscope(01)"+e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			pubcomm.writeLogfile("setPrintscope(02)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintscope(02)"+e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -682,10 +673,10 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			out.close();
 			out.flush();
 		} catch (FileNotFoundException e) {
-			pubcomm.writeLogfile("expRptToXls(03)"+e.getMessage());
+			CommUtil.writeLogfile("expRptToXls(03)"+e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			pubcomm.writeLogfile("setPrintscope(05)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintscope(05)"+e.getMessage());
 			e.printStackTrace();
 		} catch (InvalidFormatException e) {
 			// TODO Auto-generated catch block
@@ -735,14 +726,12 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			String jxmls,String mjxmls,String ismjxmls,List<String[][]> dynrptbatchparam,List<String[][]> dynrptprintparam,TreeMap pagesqlmap,
 			EbsDynrptMsgpara dyncSendMsg,EbsDynrptImg ebsdynimg,List<String[]> dyncimgcols,List<String[]> shttnamelist,String dynbodys)
 			throws DataAccessException {
-		Connection connection = null;
+		Connection conn = null;
 		CallableStatement cstmt = null;
 		ResultInfo reinfo = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
-			cstmt = connection.prepareCall("{call pkg_dync_handle.up_upd_dynipt_para(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+			conn = getconn();
+			cstmt = conn.prepareCall("{call pkg_dync_handle.up_upd_dynipt_para(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 			cstmt.setString(1, curruserid);
 			cstmt.setString(2, reqip);
 			cstmt.setString(3, dynrptb.getReportid());
@@ -952,8 +941,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 				if (cstmt != null) {
 					cstmt.close();
 				}
-				if (connection != null) {
-					connection.close();
+				if (conn != null) {
+					conn.close();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -965,14 +954,12 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	public EbsDynrptBpara getdynrptbpara(String table,String reportid)
 			throws DataAccessException {
 		Connection conn = null;
-        Session session = null;
         ResultSet rs = null;
         List list = new ArrayList();
         
         EbsDynrptBpara dynbp = null;
         try {
-            session = getSession();
-            conn = session.connection();
+            conn = getconn();
             String sqlStr = "select reportid, reportname,filename," +
             		"rptmaker,rptmakedt,rptversion,rptremark,nvl(isouttxt,'0'), pixs, emptsperpix, fildemps,nvl(xlstype,'xls') xlstype from "+table+" where reportid=?";
             PreparedStatement pstmt = conn.prepareStatement(sqlStr);
@@ -1027,14 +1014,12 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	public EbsDynrptImg getdynrptimg(String table,String reportid)
 	throws DataAccessException{
 				Connection conn = null;
-				Session session = null;
 				ResultSet rs = null;
 				List list = new ArrayList();
 
 				EbsDynrptImg dynimg = null;
 				try {
-					session = getSession();
-					conn = session.connection();
+					conn = getconn();
 					String sqlStr = "select reportid,isoutmg,imgtype,beginrow,endrow,xtitle,ytitle,bgcolor,fontsize,istip,istext from "+table+" where reportid=?";
 					PreparedStatement pstmt = conn.prepareStatement(sqlStr);
 					//System.out.println(sqlStr+":"+reportid+":"+table);
@@ -1086,14 +1071,12 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	public EbsDynrptImgcols getdynrptimgcols(String table,String reportid)
 	throws DataAccessException{
 			Connection conn = null;
-			Session session = null;
 			ResultSet rs = null;
 			List list = new ArrayList();
 			
 			EbsDynrptImgcols dynimgcols = null;
 			try {
-				session = getSession();
-				conn = session.connection();
+				conn = getconn();
 				String sqlStr = "select reportid, orderid," +
 				"paramname,imgcolor,borderwd,labelname from "+table+" where reportid=?";
 				PreparedStatement pstmt = conn.prepareStatement(sqlStr);
@@ -1141,13 +1124,11 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	public List getdynrptimgcolslist(String reportid)
 	throws DataAccessException {
 	Connection conn = null;
-	Session session = null;
 	ResultSet rs = null;
 	List list = new ArrayList();
 	EbsDynrptImgcols dynprintimgcols = null;
 	try {
-	    session = getSession();
-	    conn = session.connection();
+		conn = getconn();
 		String sqlStr = "select reportid, orderid,paramname,labelname,imgcolor,borderwd from  ebs_dynrpt_img_cols where reportid=?";
 	    PreparedStatement pstmt = conn.prepareStatement(sqlStr);
 	    pstmt.setString(1, reportid);
@@ -1196,10 +1177,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		Connection connection = null;
         CallableStatement cstmt = null;
         ResultInfo reinfo = null;
-        Session session = null;
         try {
-            session = getSession();
-            connection = session.connection();
+        	connection = getconn();
 			cstmt  = connection.prepareCall("{call pkg_dync_handle.up_upd_dynipt_img_tmp(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 			cstmt.setString(1, curruserid);
 			cstmt.setString(2, "edt");
@@ -1247,13 +1226,11 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	
 	public List getdynrptFileList(String table,String repId)throws DataAccessException{
 		Connection conn = null;
-        Session session = null;
         ResultSet rs = null;
         List list = new ArrayList();
         EbsDynrptFile dynfile = null;
         try {
-            session = getSession();
-            conn = session.connection();
+            conn = getconn();
             String sqlStr = "select reportid, subreportid, sheetname from "+table+" where reportid=? order by subreportid asc";
             PreparedStatement pstmt = conn.prepareStatement(sqlStr);
             pstmt.setString(1, repId);
@@ -1294,13 +1271,11 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	
 	public List getdynrpthpara(String table,String reportid) throws DataAccessException {
 		Connection conn = null;
-        Session session = null;
         ResultSet rs = null;
         List list = new ArrayList();
         EbsDynrptHpara dynhp = null;
         try {
-            session = getSession();
-            conn = session.connection();
+        	conn = getconn();
             String sqlStr = "select reportid, labelname, iptctrlname, iptctrltype, iptctrldef, iptctrllist, iptisnull, orderid ,iptpardef,iptreserve1,iptreserve2,iptreserve3 from "
             	            +table+" where reportid=? order by orderid asc";
             PreparedStatement pstmt = conn.prepareStatement(sqlStr);
@@ -1319,7 +1294,7 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
                 String Iptpardef=rs.getString(9);//参数默认值，可以支持sql
                 if(Iptpardef == null)Iptpardef = "";
                 if(Iptpardef.toLowerCase().indexOf("select")!=-1)
-                	Iptpardef=pubcomm.getValueBySql(Iptpardef);
+                	Iptpardef=CommUtil.getValueBySql(Iptpardef);
                 //System.out.println(Iptpardef);
                 dynhp.setIptpardef(Iptpardef);
                 dynhp.setIptreserve1(rs.getString(10));
@@ -1368,13 +1343,11 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		throws DataAccessException {
 		
 		Connection conn = null;
-        Session session = null;
         ResultSet rs = null;
         List list = new ArrayList();
         EbsDynrptSqlCol sqlcol = null;
         try {
-            session = getSession();
-            conn = session.connection();
+        	conn = getconn();
             String sqlStr = "select reportid, table_name, column_name, data_type, data_length, data_precision, data_scale" +
             		        " from "+table+" where table_name=? ";
             PreparedStatement pstmt = conn.prepareStatement(sqlStr);
@@ -1421,7 +1394,6 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	
 	public List getdynrptComboxList(String combsql,String curruserid,String departId) throws DataAccessException {
 		Connection conn = null;
-		Session session = null;
 		List list = new ArrayList();
 		Combmaplist comb = null;
 		String newcombsql=combsql;
@@ -1432,8 +1404,7 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			
 		}
 		try {
-			session = getSession();
-			conn = session.connection();
+			conn = getconn();
 			PreparedStatement pstmt = conn.prepareStatement(newcombsql);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -1494,10 +1465,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		Connection connection = null;
 		CallableStatement cstmt = null;
 		ResultInfo reinfo = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection = getconn();
 			Reader clobReader = new StringReader(sql); 
 			
 			cstmt = connection.prepareCall("{call Up_Save_Dynrpt_Sql_Cols(?,?,?,?,?,?,?,?)}");
@@ -1658,10 +1627,10 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			Reader xmlStreamReader = new InputStreamReader(new FileInputStream(xmlfile), "utf-8");
 			document = builder.build(xmlStreamReader);
 		} catch (JDOMException e) {
-			pubcomm.writeLogfile("setPrintPage(01)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintPage(01)"+e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			pubcomm.writeLogfile("setPrintPage(01)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintPage(01)"+e.getMessage());
 			e.printStackTrace();
 		}
 		Element root = document.getRootElement();// 获得根元素
@@ -1797,13 +1766,13 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			wbook.close();
 			rwb.close();
 		} catch (FileNotFoundException e) {
-			pubcomm.writeLogfile("setPrintPage(03)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintPage(03)"+e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			pubcomm.writeLogfile("setPrintPage(05)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintPage(05)"+e.getMessage());
 			e.printStackTrace();
 		} catch (WriteException e) {
-			pubcomm.writeLogfile("setPrintPage(06)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintPage(06)"+e.getMessage());
 			e.printStackTrace();
 		}
 		
@@ -1834,10 +1803,10 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			Reader xmlStreamReader = new InputStreamReader(new FileInputStream(xmlfile), "utf-8");
 			document = builder.build(xmlStreamReader);
 		} catch (JDOMException e) {
-			pubcomm.writeLogfile("setPrintPage(01)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintPage(01)"+e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			pubcomm.writeLogfile("setPrintPage(01)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintPage(01)"+e.getMessage());
 			e.printStackTrace();
 		}
 		Element root = document.getRootElement();// 获得根元素
@@ -1963,10 +1932,10 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			out.close();
 			out.flush();
 		} catch (FileNotFoundException e) {
-			pubcomm.writeLogfile("setPrintPage(03)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintPage(03)"+e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			pubcomm.writeLogfile("setPrintPage(05)"+e.getMessage());
+			CommUtil.writeLogfile("setPrintPage(05)"+e.getMessage());
 			e.printStackTrace();
 		} 
 		
@@ -1990,10 +1959,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		Connection connection = null;
         CallableStatement cstmt = null;
         ResultInfo reinfo = null;
-        Session session = null;
         try {
-            session = getSession();
-            connection = session.connection();
+        	connection = getconn();
 			cstmt  = connection.prepareCall("{call pkg_dync_handle.up_upd_dynrptBpara(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 			cstmt.setString(1, curruserid);
 			cstmt.setString(2, "edt");
@@ -2042,7 +2009,7 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			Sheet sheet = workbook.getSheet("${设置}");
 			if("".equals(writetyle)){
 				sheet.getRow(6).getCell(3).setCellValue(repid);//报表名称(英文)
-				sheet.getRow(6).getCell(7).setCellValue(pubcomm.getDate2());//制作日期
+				sheet.getRow(6).getCell(7).setCellValue(CommUtil.getDate2());//制作日期
 				sheet.getRow(7).getCell(3).setCellValue(repmarker);//制作人
 				sheet.getRow(7).getCell(7).setCellValue(rptremark);//说明
 				sheet.getRow(8).getCell(3).setCellValue(rptversion);//版本号
@@ -2247,10 +2214,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		Connection connection = null;
 		CallableStatement cstmt = null;
 		ResultInfo reinfo = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection = getconn();
 			cstmt = connection
 					.prepareCall("{call pkg_dync_handle.up_upd_dynipt_para_tmp(?,?,?,?,?,?,?,?,?,?,?,?)}");
 			cstmt.setString(1, curruserid);
@@ -2291,10 +2256,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		Connection connection = null;
 		CallableStatement cstmt = null;
 		ResultInfo reinfo = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection = getconn();
 			cstmt = connection
 					.prepareCall("{call pkg_dync_handle.up_upd_dynipt_tsql_tmp(?,?,?,?,?,?,?)}");
 			Reader clobReader = new StringReader(sqlstr); 
@@ -2366,13 +2329,11 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	public List<String[]> gettradingdate(String begindate,String enddate,String datetype,String selfsql) throws DataAccessException {
 
 		Connection conn = null;
-        Session session = null;
         ResultSet rs = null;
         List<String []> list = new ArrayList<String []>();
         String datearr[] = null;
         try {
-            session = getSession();
-            conn = session.connection();
+        	conn = getconn();
             String sqlStr  = "";
             //日
     		if("day".equals(datetype)){
@@ -2442,16 +2403,14 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			HttpServletResponse response, Map parameter, String reportFile,
 			String title, String type,String begindate,String enddate,String depname) throws Exception {
 		Connection conn = null;
-		Session session = null;
 		String rptfile = "";
 		String serverName = request.getServerName(); // 获得服务器的名字
 		String realPath = request.getRealPath(serverName); // 取得互联网程序的绝对地址
 		realPath = realPath.substring(0, realPath.lastIndexOf("\\")) + "\\temp\\";
-		String sysid = pubcomm.getsysguid32();
+		String sysid = CommUtil.getsysguid32();
 		// 获取Connection连接
 		try {
-			session = getSession();
-			conn = session.connection();
+			conn= getconn();
 			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File(reportFile));
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameter, conn);
 			String sheetname[] = new String[1];
@@ -2495,14 +2454,12 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	public String queryCountNum(String tablename,String reportno,String sqlname,Enumeration rnames,HttpServletRequest request) throws DataAccessException {
 		
 		Connection conn = null;
-        Session session = null;
         ResultSet rs = null;
         String sqlquery = null;
         String sqlCount = null;
         String countnum = null;
         try {
-            session = getSession();
-            conn = session.connection();
+        	conn= getconn();
              //取出sql语句，查询总记录用
             String sqlStr  = "select sqlstr from "+tablename+" where reportid = '" + reportno+"' and tname = '"+ sqlname +"'";
             PreparedStatement pstmt = conn.prepareStatement(sqlStr);
@@ -2560,13 +2517,11 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	public EbsDynrptPagepara getdynrptpagepara(String table,String reportid)
 	throws DataAccessException {
 	Connection conn = null;
-	Session session = null;
 	ResultSet rs = null;
 	List list = new ArrayList();
 	EbsDynrptPagepara dynpagep = null;
 	try {
-	    session = getSession();
-	    conn = session.connection();
+		conn= getconn();
 	    String sqlStr = "select reportid,reportsheetno,sqlname,pagecount,rptremark from " +table+ " where reportid =?";
 	    PreparedStatement pstmt = conn.prepareStatement(sqlStr);
 	    pstmt.setString(1, reportid);
@@ -2610,13 +2565,11 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	public List<EbsDynrptBatchpara> getdynrptbatchpara(String table,String reportid)
 	throws DataAccessException {
 	Connection conn = null;
-	Session session = null;
 	ResultSet rs = null;
 	List<EbsDynrptBatchpara> list = new ArrayList<EbsDynrptBatchpara>();
 	EbsDynrptBatchpara dynbatchp = null;
 	try {
-	    session = getSession();
-	    conn = session.connection();
+		conn= getconn();
 	    String sqlStr = "select reportid,reportsheetno,rptexptype,rptbatchpar1,rptbatchpar2,rptbatchpar3,rptbatchpar4,rptbatchpartype,rptdefindname,rptdefindtype,rptremark from " +table+ " where reportid =?";
 	    PreparedStatement pstmt = conn.prepareStatement(sqlStr);
 	    pstmt.setString(1, reportid);
@@ -2676,12 +2629,10 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	//根据部门id取得部门信息
 	public String quotedepbyid(String depcode) throws DataAccessException {
 		Connection conn = null;
-		Session session = null;
 		ResultSet rs = null;
 		String depname = "";
 		try {
-		    session = getSession();
-		    conn = session.connection();
+			conn= getconn();
 		    String sqlStr = "select depname from t_department where depcode =?";
 		    PreparedStatement pstmt = conn.prepareStatement(sqlStr);
 		    pstmt.setString(1, depcode);
@@ -2718,10 +2669,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		Connection connection = null;
 		CallableStatement cstmt = null;
 		ResultInfo reinfo = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			cstmt = connection.prepareCall("{call pkg_dync_handle.up_upd_dynipt_printpara_tmp(?,?,?,?,?,?,?,?,?,?)}");
 			cstmt.setString(1, curruserid);
 			cstmt.setString(2, "add");
@@ -2758,10 +2707,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		Connection connection = null;
 		CallableStatement cstmt = null;
 		ResultInfo reinfo = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			cstmt = connection.prepareCall("{call pkg_dync_handle.up_upd_dynipt_pagepara_tmp(?,?,?,?,?,?,?,?)}");
 			cstmt.setString(1, curruserid);
 			cstmt.setString(2, "add");
@@ -2817,13 +2764,11 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	public List getdynrptprintshowpara(String reportid)
 	throws DataAccessException {
 	Connection conn = null;
-	Session session = null;
 	ResultSet rs = null;
 	List list = new ArrayList();
 	EbsDynrptPrintpara dynprint = null;
 	try {
-	    session = getSession();
-	    conn = session.connection();
+		conn = getconn();
 	    String sqlStr = "select reportid,reportsheetno,printdirect,printalign,autowidth,pagefoot from ebs_dynrpt_printpara where reportid =?";
 	    PreparedStatement pstmt = conn.prepareStatement(sqlStr);
 	    pstmt.setString(1, reportid);
@@ -2887,10 +2832,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	throws DataAccessException {
 		Connection connection = null;
 		CallableStatement cstmt = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			cstmt = connection.prepareCall("{call pkg_tech_pub.UP_SetDyncSrchLog(?)}");
 			cstmt.setString(1, dyncsession);
 			cstmt.executeUpdate();
@@ -2915,11 +2858,9 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		CallableStatement cstmt = null;
 		ResultInfo reinfo = null;
 
-		Session session = null;
 		String rslt = "";
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			cstmt = connection.prepareCall("{ ?= call pkg_tech_pub.uf_getDyncSrchLog(?)}");
 			cstmt.setString(2, dyncsession);
 			cstmt.registerOutParameter(1, Types.CHAR);
@@ -2984,13 +2925,13 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 				out.close();
 				wbs=null;
 			} catch (FileNotFoundException e) {
-				pubcomm.writeLogfile("excelCellFormat(01)"+e.getMessage());
+				CommUtil.writeLogfile("excelCellFormat(01)"+e.getMessage());
 				e.printStackTrace();
 			} catch (IOException e) {
-				pubcomm.writeLogfile("excelCellFormat(02)"+e.getMessage());
+				CommUtil.writeLogfile("excelCellFormat(02)"+e.getMessage());
 				e.printStackTrace();
 			} catch (InvalidFormatException e) {
-				pubcomm.writeLogfile("excelCellFormat(03)"+e.getMessage());
+				CommUtil.writeLogfile("excelCellFormat(03)"+e.getMessage());
 				e.printStackTrace();
 			}
 		}	
@@ -2998,13 +2939,11 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	public Map<String, Object> queryBodyListByPro(String countsql,String srchsql,String rankfield,String rankorder,int pernum,int currpage){
 		Connection connection = null;
         CallableStatement cstmt = null;
-        Session session = null;
         ResultSet rs = null;
         Map<String, Object> map = new HashMap<String, Object>();
         
         try {
-            session = getSession();
-            connection = session.connection();
+        	connection= getconn();
 			cstmt  = connection.prepareCall("{call pkg_page.up_sp_page_cur(?,?,?,?,?,?,?,?,?)}");
 			cstmt.setString(1, countsql);
 			cstmt.setString(2, srchsql);
@@ -3110,13 +3049,11 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 	public EbsDynrptMsgpara getdynrptSendMsgpara(String table, String reportid)
 			throws DataAccessException {
 		Connection conn = null;
-		Session session = null;
 		ResultSet rs = null;
 		List list = new ArrayList();
 		EbsDynrptMsgpara dynpagep = null;
 		try {
-		    session = getSession();
-		    conn = session.connection();
+			conn = getconn();
 		    String sqlStr = "select reportid, issendmsg, useid, upwd, appid, content from " +table+ " where reportid =?";
 		    PreparedStatement pstmt = conn.prepareStatement(sqlStr);
 		    pstmt.setString(1, reportid);
@@ -3159,12 +3096,10 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 
 	public List<String> getDyncTSqlList(String table, String reportid) {
 		Connection conn = null;
-		Session session = null;
 		ResultSet rs = null;
 		List list = new ArrayList();
 		try {
-		    session = getSession();
-		    conn = session.connection();
+			conn = getconn();
 		    String sqlStr = "select sqlstr from " +table+ " where reportid =?";
 		    PreparedStatement pstmt = conn.prepareStatement(sqlStr);
 		    pstmt.setString(1, reportid);
@@ -3203,10 +3138,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		Connection connection = null;
 		CallableStatement cstmt = null;
 		ResultInfo reinfo = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			cstmt = connection.prepareCall("{call pkg_dync_handle.up_upd_dynipt_msgpara(?,?,?,?,?,?,?,?,?,?)}");
 			cstmt.setString(1, curruserid);
 			cstmt.setString(2, "upd");
@@ -3262,10 +3195,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			pstmt = connection.prepareStatement("insert into ebs_dynimp_bpara(reportid,reportname,filename,rptmaker,rptmakedt,rptversion,rptremark,resultsql) values(?,?,?,?,?,?,?,?)");
 			pstmt.setString(1, bpara.getReportid());
 			pstmt.setString(2, bpara.getReportname());
@@ -3304,10 +3235,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			pstmt = connection.prepareStatement("delete from ebs_dynimp_bpara where reportid = '"+reportId+"'");
 			flag = pstmt.execute();
 			
@@ -3335,10 +3264,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			pstmt = connection.prepareStatement("insert into ebs_dynimp_hpara(reportid,labelname,iptctrlname,iptctrltype,iptctrldef,iptctrllist,iptisnull,orderid,iptpardef,iptreserve1,iptreserve2,iptreserve3) values(?,?,?,?,?,?,?,?,?,?,?,?)");
 			pstmt.setString(1, hpara.getReportid());
 			pstmt.setString(2, hpara.getLabelname());
@@ -3381,10 +3308,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			pstmt = connection.prepareStatement("delete from ebs_dynimp_hpara where reportid = '"+reportId+"'");
 			flag = pstmt.execute();
 			
@@ -3411,10 +3336,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			pstmt = connection.prepareStatement("insert into ebs_dynimp_cparam(reportid,cname,param) values(?,?,?)");
 			pstmt.setString(1, cparam.getReportid());
 			pstmt.setString(2, cparam.getCname());
@@ -3448,10 +3371,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			pstmt = connection.prepareStatement("delete from ebs_dynimp_cparam where reportid = '"+reportId+"'");
 			flag = pstmt.execute();
 			
@@ -3478,10 +3399,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			pstmt = connection.prepareStatement("insert into ebs_dynimp_find(reportid,sheetname,lbeginscope,lendscope,lscopecontent,loffset,lnth," +
 					"tbeginscope,tendscope,tscopecontent,toffset,tnth,rbeginscope,rendscope,rscopecontent,roffset,rnth," +
 					"bbeginscope,bendscope,bscopecontent,boffset,bnth,dtlbegin,dtlend) " +
@@ -3543,10 +3462,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			pstmt = connection.prepareStatement("delete from ebs_dynimp_find where reportid = '"+reportId+"'");
 			flag = pstmt.execute();
 			
@@ -3573,10 +3490,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			pstmt = connection.prepareStatement("insert into ebs_dynimp_exesql(reportid,impsql,imporder,impsuborder) values(?,?,?,?)");
 			pstmt.setString(1, sql.getReportid());
 			pstmt.setString(2, sql.getImpsql());
@@ -3611,10 +3526,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			pstmt = connection.prepareStatement("delete from ebs_dynimp_exesql where reportid = '"+reportId+"'");
 			flag = pstmt.execute();
 			
@@ -3642,10 +3555,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			String url = "/settle/jsp/sysadmin/ireport/reportjsp/dynimpjsp/dynimpjsp.jsp?reportid="+reportno;
 			pstmt = connection.prepareStatement("update ebs_menu set url = ? where menuid = ?");
 			pstmt.setString(1, url);
@@ -3680,10 +3591,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		Connection connection = null;
 		PreparedStatement pstmt = null;
 		ResultSet res = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			pstmt = connection.prepareStatement("select reportid,reportname,filename,rptmaker,rptmakedt,rptversion,rptremark,resultsql from ebs_dynimp_bpara where reportid = ?");
 			pstmt.setString(1, reportId);
 
@@ -3729,10 +3638,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		Connection connection = null;
 		PreparedStatement pstmt = null;
 		ResultSet res = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			pstmt = connection.prepareStatement("select reportid,cname,param from ebs_dynimp_cparam where reportid = ? order by cname");
 			pstmt.setString(1, reportId);
 
@@ -3775,10 +3682,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		Connection connection = null;
 		PreparedStatement pstmt = null;
 		ResultSet res = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			pstmt = connection.prepareStatement("select reportid,sheetname,lbeginscope,lendscope,lscopecontent,loffset,lnth," +
 					"tbeginscope,tendscope,tscopecontent,toffset,tnth,rbeginscope,rendscope,rscopecontent,roffset,rnth," +
 					"bbeginscope,bendscope,bscopecontent,boffset,bnth,dtlbegin,dtlend " +
@@ -3846,10 +3751,8 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		Connection connection = null;
 		PreparedStatement pstmt = null;
 		ResultSet res = null;
-		Session session = null;
 		try {
-			session = getSession();
-			connection = session.connection();
+			connection= getconn();
 			pstmt = connection.prepareStatement("select reportid,impsql,imporder,impsuborder from ebs_dynimp_exesql where reportid = ? order by imporder,impsuborder");
 			pstmt.setString(1, reportId);
 
@@ -3892,13 +3795,11 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			String inputValue) throws DataAccessException {
 		Connection connection = null;
         CallableStatement cstmt = null;
-        Session session = null;
         ResultSet rs = null;
         Map<String, Object> map = new HashMap<String, Object>();
         
         try {
-            session = getSession();
-            connection = session.connection();
+        	connection= getconn();
 			cstmt  = connection.prepareCall("{call pkg_dync_handle.up_qry_DyncImgResult(?,?,?,?,?,?,?,?,?)}");
 			cstmt.setString(1, reportId);
 			cstmt.setString(2, reportJrxmlm);
@@ -3953,18 +3854,15 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 
         return map;
 	}
-
-	public EbsDynrptImg getEbsDynrptImg(String table, String reportId)
-			throws DataAccessException {
+	
+	public EbsDynrptImg getEbsdynrptImg(String table,String reportId) throws DataAccessException {
 		Connection conn = null;
-        Session session = null;
         ResultSet rs = null;
         List list = new ArrayList();
         
         EbsDynrptImg dynimg = null;
         try {
-            session = getSession();
-            conn = session.connection();
+        	conn = getconn();
             String sqlStr = "select reportid, isoutmg, imgtype, beginrow, endrow, xtitle, ytitle, bgcolor, fontsize,nvl(istip,1) istip,nvl(istext,1) istext,xcount from "+table+" where reportid=?";
             PreparedStatement pstmt = conn.prepareStatement(sqlStr);
             //System.out.println(sqlStr+":"+reportid+":"+table);
@@ -4011,18 +3909,15 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		else
 			return (EbsDynrptImg) (list.get(0));
 	}
-
-	public List<EbsDynrptImgcols> getEbsDynrptImgcols(String table,
-			String reportId,String sheetindex) throws DataAccessException {
+	
+	public List<EbsDynrptImgcols> getEbsdynrptImgCols(String table,String reportId,String sheetindex) throws DataAccessException {
 		// TODO Auto-generated method stub
 		Connection conn = null;
-		Session session = null;
 		ResultSet rs = null;
 		List<EbsDynrptImgcols> list = new ArrayList<EbsDynrptImgcols>();
 		EbsDynrptImgcols dynimgcols = null;
 		try {
-		    session = getSession();
-		    conn = session.connection();
+			conn = getconn();
 		    String sqlStr = "select reportid, orderid, fieldid, paramname, reportjxmlm, tname, fieldname, imgcolor, borderwd, labelname, fieldidc, sheetindex from " +table+ " where reportid =? and sheetindex=?";
 		    PreparedStatement pstmt = conn.prepareStatement(sqlStr);
 		    pstmt.setString(1, reportId);
@@ -4070,16 +3965,13 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 			return list;
 	}
 
-	public String getEbsDynrptImgDefault(String reportId)
-			throws DataAccessException {
+	public String getEbsdynrptImgDefault(String reportId) throws DataAccessException{
 		Connection conn = null;
-		Session session = null;
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
 		String params="";
 		try {
-		    session = getSession();
-		    conn = session.connection();
+			conn = getconn();
 		    String sqlStr = "select iptctrlname,iptpardef from ebs_dynrpt_hpara where reportid =? order by orderid ";
 		    pstmt = conn.prepareStatement(sqlStr);
 		    pstmt.setString(1, reportId);
@@ -4090,11 +3982,11 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		    	if(val==null)val="";
 		    	if(val.toLowerCase().indexOf("select")!=-1)
 		    	{
-		    		val=pubcomm.getValueBySql(val);
+		    		val=CommUtil.getValueBySql(val);
 		    	}
 		    	params = params+name+"@@"+val+";";
 		    }
-		} catch (Exception e) {
+		} catch (Exception e){
 		    e.printStackTrace();
 		    return "";
 		}
@@ -4124,99 +4016,4 @@ public class iReportManageDAOImpl extends HibernateDaoSupport implements
 		return params;
 	}
 	
-	/* 
-	 * author：yanh
-	 * description:查询首页右上角，每天的数据
-	 */
-	public Map<String,String> eveData() {
-		Connection conn = null;
-        Session session = null;
-        ResultSet rs = null;
-    	Map<String, String> eveMap=new LinkedHashMap<String, String>();
-		try {
-            session = getSession();
-            conn = session.connection();
-            String eveSql=QueryHomeSql(2);
-            PreparedStatement pstmt = conn.prepareStatement(eveSql);
-            rs = pstmt.executeQuery();
-            ResultSetMetaData metaData = rs.getMetaData();
-            while(rs.next()){
-		    		String colKey = rs.getString(1);
-		    		colKey = colKey==null?"":colKey;
-		    		String colValue=rs.getString(2);
-		    		colValue=colValue==null?"":colValue;
-		    		eveMap.put(colKey, colValue);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        finally {
-        	try {
-                if (rs != null) {
-                	rs.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (conn != null) {
-                	conn.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return eveMap;
-	}
-	/* 
-	 * author：yanh
-	 * description:查询首页右下角，最近几天的数据
-	 */
-	public List<Map<String, String>> recData() {
-		Connection conn = null;
-        Session session = null;
-        ResultSet rs = null;
-        List<Map<String, String>> list=new ArrayList<Map<String,String>>();
-		try {
-	        session = getSession();
-            conn = session.connection();
-            String eveSql=QueryHomeSql(3);
-            PreparedStatement pstmt = conn.prepareStatement(eveSql);
-            rs = pstmt.executeQuery();
-            ResultSetMetaData metaData = rs.getMetaData();
-            int column=metaData.getColumnCount();
-	        while(rs.next())
-	        {
-	        Map<String, String>  temp=new LinkedHashMap<String, String>();
-	        for (int i = 1; i <= column; i++) {
-				String key=metaData.getColumnName(i);
-				String value=rs.getString(i);
-				temp.put(key, value);
-			}
-	       list.add(temp);	
-	     }
-	    return list;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ArrayList<Map<String,String>>();
-        }
-        finally {
-        	try {
-                if (rs != null) {
-                	rs.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (conn != null) {
-                	conn.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-	}
-
 }
