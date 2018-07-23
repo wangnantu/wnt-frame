@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>基础-功能</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../css/bootstrap.css">
+	<link rel="stylesheet" href="../css/ui.jqgrid-bootstrap.css">
+	<link rel="stylesheet" href="../css/font-awesome.css">
+	<link rel="stylesheet" href="../css/flyPanels.css">
+
+</head>
+
+<body>
+	<div class="flypanels-container preload">
+		<div class="offcanvas flypanels-left" style="background-color: #ecf0f5;">
+			<div class="panelcontent" data-panel="leftpanel">
+
+			</div>
+		</div>
+		<div class="flypanels-main">
+			<div class="flypanels-topbar" style="background-color: #d2d6de;">
+			        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">  
+			            <li role="presentation"><a href="javascript:addFunc();" role="menuitem" tabindex="-1"><b>功能</b></a></li>  
+			            <li role="presentation"><a href="javascript:addMeth();" role="menuitem" tabindex="-1"><b>方法</b></a></li>  
+			            <li role="presentation"><a href="javascript:addProc();" role="menuitem" tabindex="-1"><b>过程</b></a></li>  
+			        </ul>  
+				<a class="flypanels-button-left icon-menu" data-panel="leftpanel" href="javascript:void(0)" style="padding-left: 12px;padding-right: 12px; color: #566f89"><i class="fa fa-cog"></i></a>
+				<a class="flypanels-button-left icon-menu"  id="dropdownMenu1" type="button" style="color: #666666" data-toggle="dropdown" data-placement="bottom" title="新增"><b><i class="fa fa-plus"></i></a>
+				<a class="flypanels-button-left icon-menu" href="#infoModal" style="color: #666666" data-toggle="modal" data-placement="bottom" title="删除"><i class="fa fa-trash-o"></i></a>
+				<a class="flypanels-button-left icon-menu" href="javascript:refreshData();" style="color: #666666" data-toggle="tooltip" data-placement="bottom" title="刷新"><i class="fa fa-refresh"></i></a>
+				<a class="flypanels-button-left icon-menu" href="javascript:togglebar();" style="color: #666666" data-toggle="tooltip" data-placement="bottom" title="筛选"><i class="fa fa-thumb-tack"></i></a>
+				<a class="flypanels-button-right icon-menu" data-panel="rightpanel" href="javascript:void(0)" style="padding-left: 12px;padding-right: 12px; color: #566f89"><i class="fa fa-bars"></i></a>
+			</div>
+			<div class="flypanels-content" align="left">
+				<div class="left"style='float:left;width:25%;height:500px'>
+					<table id="jqg-func"></table>
+					<div id="jqg-func-pager"></div>
+				</div>
+				<div class="left"style='float:left;width:35%;height:500px'>
+					<table id="jqg-meth"></table>
+					<div id="jqg-meth-pager"></div>
+				</div>
+				<div class="right"style='float:right;width:40%;height:500px;'>
+					<table id="jqg-proc"></table>
+					<div id="jqg-proc-pager"></div>
+				</div>
+				
+				<hr />
+				<div style="margin-top: 2px;margin-bottom: 2px;">
+					<div>
+						<lable style="margin-left: 20px;height: 80px;line-height: 34px;">详细信息</lable>
+						<button id='btn-save' class="btn btn-primary" style="float: right;margin-right: 20px;">保存</button>
+					</div>					
+				</div>
+				
+				<div id="funcform" style="display: none;">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">功能ID</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" class="form-control" id="funcid" placeholder="整型数字" value="" data-bv-message="不合法" required data-bv-notempty-message="不能为空" pattern="^[0-9]\d{7}$" data-bv-regexp-message="必须是整型数字">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">功能代码</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" class="form-control" id="funccode" placeholder="功能代码">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">功能名称</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" class="form-control" id="funcname" placeholder="功能名称">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">功能描述</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" class="form-control" id="funcdesc" placeholder="功能描述">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">功能状态</label>
+							<div class="col-xs-12 col-sm-8">
+								<select class="form-control" id="funcstatus">
+									<option value="A">启用</option>
+									<option value="P">暂停</option>
+									<option value="U">未知</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">备注</label>
+							<div class="col-xs-12 col-sm-8">
+								<textarea class="form-control" id="funcremark" placeholder="备注"></textarea>
+							</div>
+						</div>
+				
+					</form>
+				</div>
+			
+				<div id="methform" style="display: none;">
+					<form class="form-horizontal">
+						<div class="form-group">
+								<input type="text" class="form-control" id="methfuncid" style="display:none;">
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">方法ID</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" class="form-control" id="methid" placeholder="方法ID" value="" data-bv-message="不合法" required data-bv-notempty-message="不能为空" pattern="^[0-9]\d{7}$" data-bv-regexp-message="必须是整型数字">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">方法代码</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" class="form-control" id="methcode" placeholder="方法代码">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">方法名称</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" class="form-control" id="methname" placeholder="方法名称">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">方法描述</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" class="form-control" id="methdesc" placeholder="方法描述">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">主流程</label>
+							<div class="col-xs-12 col-sm-8">								
+								<input type="text" class="form-control" id="mainflow" placeholder="主流程">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">异常流程</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" class="form-control" id="exceptionflow" placeholder="异常流程">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">输出方法</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" class="form-control" id="outputfunc" placeholder="输出方法">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">方法状态</label>
+							<div class="col-xs-12 col-sm-8">
+								<select class="form-control" id="methstatus">
+									<option value="A">启用</option>
+									<option value="P">暂停</option>
+									<option value="U">未知</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">备注</label>
+							<div class="col-xs-12 col-sm-8">
+								<textarea class="form-control" id="methremark" placeholder="备注"></textarea>
+							</div>
+						</div>
+				
+					</form>
+				</div>
+			
+				<div id="procform" style="display: none;">
+					<form class="form-horizontal">
+						<div class="form-group">
+								<input type="text" class="form-control" id="procfuncid" style="display:none;">
+								<input type="text" class="form-control" id="procmethid" style="display:none;">
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">过程ID</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" class="form-control" id="procid" placeholder="过程ID">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">过程序号</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" class="form-control" id="procseqno" placeholder="过程序号">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">过程代码</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" class="form-control" id="proccode" placeholder="过程代码">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">过程名称</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" class="form-control" id="procname" placeholder="过程名称">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">过程描述</label>
+							<div class="col-xs-12 col-sm-8">
+								<input type="text" class="form-control" id="procdesc" placeholder="过程描述">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">过程类型</label>
+							<div class="col-xs-12 col-sm-8">
+								<select class="form-control" id="procclass">
+									<option value="SelectOne">SelectOne</option>
+									<option value="SelectAll">SelectAll</option>
+									<option value="DML">DML</option>
+									<option value="BatchDML">BatchDML</option>
+									<option value="If">If</option>
+									<option value="Each">Each</option>
+									<option value="EachResultset">EachResultset</option>
+									<option value="For">For</option>
+									<option value="Expression">Expression</option>
+									<option value="Method">Method</option>
+									<option value="Catch">Catch</option>
+									<option value="Throw">Throw</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">过程状态</label>
+							<div class="col-xs-12 col-sm-8">
+								<select class="form-control" id="procstatus">
+									<option value="A">启用</option>
+									<option value="P">暂停</option>
+									<option value="U">未知</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 control-label">备注</label>
+							<div class="col-xs-12 col-sm-8">
+								<textarea class="form-control" id="procremark" placeholder="备注"></textarea>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="offcanvas flypanels-right" style="background-color: #ecf0f5;">
+			<div class="panelcontent" data-panel="rightpanel">
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="infoModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<i class="fa fa-close"></i>
+					</button>
+					<h4 class="modal-title" id="infoModalLabel">友情提示</h4>
+				</div><!-- modal-header -->
+				<div class="modal-body">
+					<p id="info">未选择删除项</p>
+				</div><!-- modal-body -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">取消</button>
+					<button type="submit" class="btn btn-primary" id="btn-del">确定</button>
+				</div><!-- modal-footer -->
+			</div><!-- modal-content -->
+		</div><!-- modal-dialog -->
+	</div><!-- modal -->
+	
+	<script src="../js/jquery.js"></script>
+	<script src="../js/bootstrap.js"></script>
+	<script src="../js/grid.locale-cn.js"></script>
+	<script src="../js/jquery.jqGrid.js"></script>
+	<script src="../js/flypanels.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			loadFuncGrid();
+			loadMethGrid();
+			loadProcGrid()
+		});
+	</script>
+	<script type="text/javascript">
+		$.jgrid.defaults.styleUI = 'Bootstrap';
+		$.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
+		var funcgrid;
+		function loadFuncGrid() {
+			funcgrid = $("#jqg-func").jqGrid({
+				url: "/biz.do",
+				mtype: "POST",
+				ajaxGridOptions: { contentType: "application/json; charset=utf-8" },
+				datatype : "json",
+				serializeGridData: function (postData) {
+					return JSON.stringify({
+						"funcid": "110.81",
+					});
+				},
+				width: "100%",
+				height: "100%",
+				shrinkToFit: true,
+				colModel: [
+					{ label: "功能ID", name: "funcid", width: 80, align: "center",  key:true },
+					{ label: "功能代码", name: "funccode", hidden:true },
+					{ label: "功能名称", name: "funcname", width: 120, align: "center" },
+					{ label: "功能描述", name: "funcdesc", width: 120, align: "center" },
+					{ label: "创建日期", name: "createdate", hidden:true },
+					{ label: "创建者", name: "createid", hidden:true },
+					{ label: "注销日期", name: "canceldate", hidden:true },
+					{ label: "注销者", name: "cancelid", hidden:true },
+					{ label: "功能状态", name: "funcstatus", hidden:true},
+					{ label: "功能备注", name: "funcremark", hidden:true }
+				],
+				sortable: true,
+				rowNum: 10,
+				//rowList : [10,50,100],
+				rownumbers: false,
+				pgbuttons : true,
+				pager:"#jqg-func-pager",
+				viewrecords: false,
+				loadonce: true,
+				onSelectRow : function(){				
+					var fr = $("#jqg-func").jqGrid('getGridParam', 'selrow');
+					var rowData = $("#jqg-func").jqGrid("getRowData",fr);
+					reloadMeth(rowData.funcid);
+					reloadProc(rowData.funcid,"");
+					showfunc(rowData);
+				}
+			});
+// 			$("#jqg-func").jqGrid('setGroupHeaders', {
+// 				useColSpanStyle: true
+// 			});
+			$("#jqg-func").jqGrid('filterToolbar');
+			$("#jqg-func").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
+			$("#jqg-func").closest(".ui-jqgrid-view").css({ "overflow-x" : "hidden" });
+			togglebarFunc();
+		}
+		var methgrid;
+		function loadMethGrid() {
+			methgrid = $("#jqg-meth").jqGrid({
+				url: "/biz.do",
+				mtype: "POST",
+				ajaxGridOptions: { contentType: "application/json; charset=utf-8" },
+				datatype : "json",
+				serializeGridData: function (postData) {
+					return JSON.stringify({
+						"funcid": "111.82", //查询
+						"params": {
+							"funcid": null
+						}
+					});
+				},
+				width: "100%",
+				height: "100%",
+				shrinkToFit: true,
+				colModel: [
+					{ label: "功能ID", name: "funcid", hidden:true},
+					{ label: "方法ID", name: "methid", width: 80, align: "center" },
+					{ label: "方法名称", name: "methname", width: 120, align: "center" },
+					{ label: "方法代码", name: "methcode", hidden:true },
+					{ label: "方法描述", name: "methdesc", width: 120, align: "center" },
+					{ label: "方法状态", name: "methstatus", hidden:true },
+					{ label: "主流程", name: "mainflow", width: 120, align: "center" },
+					{ label: "异常流程", name: "exceptionflow", hidden:true },
+					{ label: "输出方法", name: "outputfunc", hidden:true },
+					{ label: "备注", name: "methremark", hidden:true }
+				],
+				sortable: true,
+				rowNum: 10,
+				//rowList : [10],
+				rownumbers: false,
+				pgbuttons : true,
+				pager:"#jqg-meth-pager",
+				viewrecords: false,
+				loadonce: true,
+				onSelectRow : function(){
+					var mr = $("#jqg-meth").jqGrid('getGridParam', 'selrow');
+					var rowData = $("#jqg-meth").jqGrid("getRowData",mr);
+					reloadProc(rowData.funcid,rowData.methid);
+					showmeth(rowData);
+				}
+			});
+			$("#jqg-meth").jqGrid('setGroupHeaders', {
+				useColSpanStyle: true
+			});
+			$("#jqg-meth").jqGrid('filterToolbar');
+			$("#jqg-meth").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
+			$("#jqg-meth").closest(".ui-jqgrid-view").css({ "overflow-x" : "hidden" });
+			togglebarMeth();
+		}
+		
+		var procgrid;
+		function loadProcGrid() {
+			methgrid = $("#jqg-proc").jqGrid({
+				url: "/biz.do",
+				mtype: "POST",
+				ajaxGridOptions: { contentType: "application/json; charset=utf-8" },
+				datatype : "json",
+				serializeGridData: function (postData) {
+					return JSON.stringify({
+						"funcid": "112.83", //查询
+						"params": {
+							"funcid":"0",
+							"methid":"0"
+						}
+					});
+				},
+				width: "100%",
+				height: "100%",
+				shrinkToFit: true,
+				colModel: [
+					{ label: "功能ID", name: "funcid", hidden:true},
+					{ label: "方法ID", name: "methid", hidden:true},
+					{ label: "过程ID", name: "procid", width: 100, align: "center" },
+					{ label: "过程名称", name: "procname", width: 160, align: "center" },
+					{ label: "序号", name: "seqno", width: 60, align: "center" },
+					{ label: "过程代码", name: "proccode", hidden:true },
+					{ label: "过程描述", name: "procdesc", width: 160, align: "center" },
+					{ label: "过程状态", name: "procstatus", hidden:true },
+					{ label: "备注", name: "procremark", hidden:true },
+					{ label: "过程类型", name: "procclass", width: 120, align: "center" }
+				],
+				sortable: true,
+				rowNum: 10,
+				//rowList : [10],
+				rownumbers: false,
+				pgbuttons : true,
+				pager:"#jqg-proc-pager",
+				viewrecords: false,
+				loadonce: true,
+				onSelectRow : function(){
+					var pr = $("#jqg-proc").jqGrid('getGridParam', 'selrow');
+					var rowData = $("#jqg-proc").jqGrid("getRowData",pr);
+					showproc(rowData);
+				}
+			});
+			$("#jqg-proc").jqGrid('setGroupHeaders', {
+				useColSpanStyle: true
+			});
+			$("#jqg-proc").jqGrid('filterToolbar');
+			$("#jqg-proc").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
+			$("#jqg-proc").closest(".ui-jqgrid-view").css({ "overflow-x" : "hidden" });
+			togglebarProc();
+		}
+		 function togglebarFunc() {
+    		$("#jqg-func")[0].toggleToolbar();
+    	}
+    	function togglebarMeth() {
+    		$("#jqg-meth")[0].toggleToolbar();
+    	}
+    	function togglebarProc() {
+    		$("#jqg-proc")[0].toggleToolbar();
+    	}
+    	function togglebar(){
+    		togglebarFunc();
+    		togglebarMeth();
+    		togglebarProc();
+    	}
+    	function reloadFunc(){
+    		$("#jqg-func").jqGrid('setGridParam',{  
+	            datatype:"json",
+	            serializeGridData: function (postData) {
+					return JSON.stringify({
+						"funcid": "110.81"
+						
+					});
+				}, 
+	            page:1  
+	        }).trigger("reloadGrid");
+    	}
+    	function reloadMeth(funcid){
+			$("#jqg-meth").jqGrid('setGridParam',{  
+	            datatype:"json",
+	            serializeGridData: function (postData) {
+					return JSON.stringify({
+						"funcid": "111.82", //查询
+						"params": {
+							"funcid": funcid
+						}
+					});
+				}, 
+	            page:1  
+	        }).trigger("reloadGrid");
+    	}
+    	
+    	 function reloadProc(funcid,methid){
+			$("#jqg-proc").jqGrid('setGridParam',{  
+	            datatype:"json",
+	            serializeGridData: function (postData) {
+					return JSON.stringify({
+						"funcid": "112.83", //查询
+						"params": {
+							"funcid": funcid,
+							"methid": methid
+						}
+					});
+				}, 
+	            page:1  
+	        }).trigger("reloadGrid");
+    	}
+    	function refreshData(){
+    		reloadFunc();
+	        reloadMeth();
+	        reloadProc();
+	        $("#funcform").hide();
+			$("#methform").hide();
+			$("#procform").hide();
+			document.getElementById("btn-save").setAttribute("onclick", "");
+    	}
+    	
+		function showfunc(rowData) {
+			$("#funcform").show();
+			$("#methform").hide();
+			$("#procform").hide();
+			if (rowData == null) {
+				$("#funcid").val("");
+				$("#funcid").removeAttr("readonly");
+				$("#funccode").val("");
+				$("#funcname").val("");
+				$("#funcdesc").val("");
+				$("#funcstatus").val("");
+				$("#funcremark").val("");
+			} else {				
+				$("#funcid").val(rowData.funcid);
+				$("#funcid").attr("readonly", "readonly");
+				$("#funccode").val(rowData.funccode);
+				$("#funcname").val(rowData.funcname);
+				$("#funcdesc").val(rowData.funcdesc);
+				$("#funcstatus").val(rowData.funcstatus);
+				$("#funcremark").val(rowData.funcremark);
+			}
+			
+			document.getElementById("btn-save").setAttribute("onclick", "saveFunc();");
+			document.getElementById("btn-del").setAttribute("onclick", "delFunc();");
+			document.getElementById("info").innerText = "删除功能亦将删除此功能下的所有方法和过程，确定要删除此功能？";
+		}
+		function showmeth(rowData) {
+			$("#funcform").hide();
+			$("#methform").show();
+			$("#procform").hide();
+			
+			GetAllProc();
+			
+			if (rowData == null) {
+				$("#methid").val("");
+				$("#methid").removeAttr("readonly");
+				$("#methcode").val("");
+				$("#methname").val("");
+				$("#methdesc").val("");
+				$("#methstatus").val("");
+				$("#mainflow").val("");
+				$("#exceptionflow").val("");
+				$("#outputfunc").val("");
+				$("#methremark").val("");
+			} else {
+				$("#methfuncid").val(rowData.funcid);
+				$("#methid").val(rowData.methid);
+				$("#methid").attr("readonly", "readonly");
+				$("#methcode").val(rowData.methcode);
+				$("#methname").val(rowData.methname);
+				$("#methdesc").val(rowData.methdesc);
+				$("#methstatus").val(rowData.methstatus);
+				$("#mainflow").val(rowData.mainflow);
+				$("#exceptionflow").val(rowData.exceptionflow);
+				$("#outputfunc").val(rowData.outputfunc);
+				$("#methremark").val(rowData.methremark);
+			}
+			
+			document.getElementById("btn-save").setAttribute("onclick", "saveMeth();");
+			document.getElementById("btn-del").setAttribute("onclick", "delMeth();");
+			document.getElementById("info").innerText = "删除方法亦将删除此方法下的所有过程，确定要删除此方法？";
+		}
+		function showproc(rowData) {
+			$("#funcform").hide();
+			$("#methform").hide();
+			$("#procform").show();
+			if (rowData == null) {
+				$("#procid").val("");
+				$("#procid").removeAttr("readonly");
+				$("#procseqno").val("");
+				$("#proccode").val("");
+				$("#procname").val("");
+				$("#procdesc").val("");
+				$("#procstatus").val("");
+				$("#procremark").val("");
+				$("#procclass").val("");
+			} else {
+				$("#procfuncid").val(rowData.funcid);
+				$("#procmethid").val(rowData.methid);
+				$("#procid").val(rowData.procid);
+				$("#procid").attr("readonly", "readonly");
+				$("#procseqno").val(rowData.seqno);
+				$("#proccode").val(rowData.proccode);
+				$("#procname").val(rowData.procname);
+				$("#procdesc").val(rowData.procdesc);
+				$("#procstatus").val(rowData.procstatus);
+				$("#procremark").val(rowData.procremark);
+				$("#procclass").val(rowData.procclass);
+			}
+			
+			document.getElementById("btn-save").setAttribute("onclick", "saveProc();");
+			document.getElementById("btn-del").setAttribute("onclick", "delProc();");
+			document.getElementById("info").innerText = "确定要删除此过程？";
+		}
+		
+		var procSelect;
+		// 获取该方法下所有过程
+		function GetAllProc() {
+			var procLst = $("#jqg-proc").jqGrid("getRowData");
+			jQuery(procLst).each(function(){
+		        console.log(this.procid);
+		    });
+		}
+		
+		
+		function addFunc(){
+			var fr = $("#jqg-func").jqGrid('getGridParam', 'selrow');
+			if(fr != null){
+				refreshData();
+			}
+			showfunc();
+		}
+		function addMeth(){
+			var fr = $("#jqg-func").jqGrid('getGridParam', 'selrow');			
+			if(fr == null){
+				alert("请先选择功能");
+			}else{
+				var frowData = $("#jqg-func").jqGrid("getRowData",fr);
+				$("#methfuncid").val(frowData.funcid);
+				showmeth();
+			}
+		}
+		function addProc(){
+			var mr = $("#jqg-meth").jqGrid('getGridParam', 'selrow');
+			if(mr == null){
+				alert("请先选择方法");
+			}else{
+				showproc();
+				var mrowData = $("#jqg-meth").jqGrid("getRowData",mr);
+				$("#procfuncid").val(mrowData.funcid);
+				$("#procmethid").val(mrowData.methid);
+			}
+		}
+		function saveFunc() {
+			var	params={
+				"fid":parseInt($("#funcid").val()),
+				"code":$("#funccode").val(),
+				"name":$("#funcname").val(),
+				"desc":$("#funcdesc").val(),
+				"status":$("#funcstatus").val(),
+				"remark":$("#funcremark").val(),
+				"isdel":false
+			};
+			
+			$.ajax({
+        		data : JSON.stringify({
+        			"params" :params,
+					"funcid": "110.80",
+				}),
+				type : "POST",
+				contentType : "application/json; charset=utf-8",
+				dataType : "json",
+				url : "/biz.do",
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					alert(XMLHttpRequest.status);
+					alert(XMLHttpRequest.readyState);
+					alert(textStatus);
+				},
+				success : function(data) {
+					if ( data.code == "0" ) {
+						alert("保存功能成功");
+						refreshData();
+					} else {
+						alert("保存功能失败");
+					}
+				}
+            });
+		}
+		function delFunc() {
+//			var	params={
+//				"id":$("#funcid").val(),
+//				"isdel":true
+//			};
+			$("#infoModal").modal("hide");
+			$.ajax({
+        		data : JSON.stringify({
+        			"params" : {
+        				"fid":parseInt($("#funcid").val()),
+        				"isdel":true
+					},
+					"funcid": "110.80"
+				}),
+				type : "POST",
+				contentType : "application/json; charset=utf-8",
+				dataType : "json",
+				url : "/biz.do",
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					alert(XMLHttpRequest.status);
+					alert(XMLHttpRequest.readyState);
+					alert(textStatus);
+				},
+				success : function(data) {
+					if ( data.code == "0" ) {
+						alert("删除功能成功");
+						refreshData();
+					} else {
+						alert("删除功能失败");
+					}
+				}
+            });
+		}
+		function saveMeth() {
+			var	params={
+				"fid":parseInt($("#methfuncid").val()),
+				"mid":parseInt($("#methid").val()),
+				"code":$("#methcode").val(),
+				"name":$("#methname").val(),
+				"desc":$("#methdesc").val(),
+				"status":$("#methstatus").val(),
+				"mflow":$("#mainflow").val(),
+				"eflow":$("#exceptionflow").val(),
+				"outputfunc":$("#outputfunc").val(),
+				"remark":$("#methremark").val(),
+				"isdel":false
+			};
+			
+			$.ajax({
+        		data : JSON.stringify({
+        			"params" :params,
+					"funcid": "111.80"
+				}),
+				type : "POST",
+				contentType : "application/json; charset=utf-8",
+				dataType : "json",
+				url : "/biz.do",
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					alert(XMLHttpRequest.status);
+					alert(XMLHttpRequest.readyState);
+					alert(textStatus);
+				},
+				success : function(data) {
+					if ( data.code == "0" ) {
+						alert("保存方法成功");
+						refreshData();
+					} else {
+						alert("保存方法失败");
+					}
+				}
+            });
+		}
+		function delMeth() {
+//			var	params={
+//				"fid":parseInt($("#funcid").val()),
+//				"mid":parseInt($("#methid").val()),
+//				"isdel":true
+//			};
+			$("#infoModal").modal("hide");
+			$.ajax({
+        		data : JSON.stringify({
+        			"params" :{
+        				"fid":parseInt($("#funcid").val()),
+						"mid":parseInt($("#methid").val()),
+						"isdel":true
+        			},
+					"funcid": "111.80"
+				}),
+				type : "POST",
+				contentType : "application/json; charset=utf-8",
+				dataType : "json",
+				url : "/biz.do",
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					alert(XMLHttpRequest.status);
+					alert(XMLHttpRequest.readyState);
+					alert(textStatus);
+				},
+				success : function(data) {
+					if ( data.code == "0" ) {
+						alert("删除方法成功");
+						refreshData();
+					} else {
+						alert("删除方法失败");
+					}
+				}
+            });
+		}
+		function saveProc() {
+			var	params={
+				"fid":parseInt($("#procfuncid").val()),
+				"mid":parseInt($("#procmethid").val()),
+				"pid":$("#procid").val(),
+				"seqno":parseInt($("#procseqno").val()),
+				"code":$("#proccode").val(),
+				"name":$("#procname").val(),
+				"desc":$("#procdesc").val(),
+				"status":$("#procstatus").val(),
+				"remark":$("#procremark").val(),
+				"class":$("#procclass").val(),
+				"isdel":false
+			};
+			
+			$.ajax({
+        		data : JSON.stringify({
+        			"params" :params,
+					"funcid": "112.80"
+				}),
+				type : "POST",
+				contentType : "application/json; charset=utf-8",
+				dataType : "json",
+				url : "/biz.do",
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					alert(XMLHttpRequest.status);
+					alert(XMLHttpRequest.readyState);
+					alert(textStatus);
+				},
+				success : function(data) {
+					if ( data.code == "0" ) {
+						alert("保存过程成功");
+						refreshData();
+					} else {
+						alert("保存过程失败");
+					}
+				}
+            });
+		}
+		function delProc() {
+			$("#infoModal").modal("hide");
+			$.ajax({
+        		data : JSON.stringify({
+        			"params" :{
+        				"fid":parseInt($("#procfuncid").val()),
+						"mid":parseInt($("#procmethid").val()),
+						"pid":$("#procid").val(),
+						"seqno":parseInt($("#procseqno").val()),
+						"isdel":true
+        			},
+					"funcid": "112.80"
+				}),
+				type : "POST",
+				contentType : "application/json; charset=utf-8",
+				dataType : "json",
+				url : "/biz.do",
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					alert(XMLHttpRequest.status);
+					alert(XMLHttpRequest.readyState);
+					alert(textStatus);
+				},
+				success : function(data) {
+					if ( data.code == "0" ) {
+						alert("删除过程成功");
+						refreshData();
+					} else {
+						alert("删除过程失败");
+					}
+				}
+            });
+		}
+
+	</script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function(event) {
+			flyPanels.init({
+				leftPanel: {
+					init: true
+				},
+				rightPanel: {
+					init: true
+				}
+			})
+		});
+	</script>
+	
+</body>
+</html>
